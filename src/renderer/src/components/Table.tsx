@@ -25,7 +25,7 @@ const Table: React.FC<Props> = ({ sourceUrlList, targetUrlList }) => {
         </thead>
         <tbody>
           {Array.from({ length: maxLength }).map((_, index) => (
-            <tr key={index} className="odd:bg-gray-100 even:bg-white">
+            <tr key={crypto.randomUUID()} className="odd:bg-gray-100 even:bg-white">
               <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
               <td className="border border-gray-300 px-4 py-2">{sourceUrlList[index] || ''}</td>
               <td className="border border-gray-300 px-4 py-2">{targetUrlList[index] || ''}</td>
