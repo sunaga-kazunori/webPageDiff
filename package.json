@@ -21,9 +21,14 @@
     "build:linux": "electron-vite build && electron-builder --linux"
   },
   "dependencies": {
+    "@d-zero/puppeteer-scroll": "^2.0.0",
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
     "@tailwindcss/vite": "^4.0.6",
+    "electron-store": "^10.0.1",
+    "pixelmatch": "^6.0.0",
+    "pngjs": "^7.0.0",
+    "puppeteer": "^24.2.1",
     "tailwindcss": "^4.0.6"
   },
   "devDependencies": {

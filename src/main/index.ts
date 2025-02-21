@@ -1,11 +1,20 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron';
-import { join } from 'path';
-import { electronApp, optimizer, is } from '@electron-toolkit/utils';
+import { electronApp, is, optimizer } from '@electron-toolkit/utils';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import fs from 'fs';
+import os from 'os';
+import path, { join } from 'path';
+import { PNG } from 'pngjs';
+import puppeteer from 'puppeteer';
 import icon from '../../resources/icon.png?asset';
+
+type DiffImageList = string[];
+type DiffPixelList = string[];
+
+let mainWindow: null | BrowserWindow = null;
 
 function createWindow(): void {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
     show: false,
@@ -18,7 +27,7 @@ function createWindow(): void {
   });
 
   mainWindow.on('ready-to-show', () => {
-    mainWindow.show();
+    mainWindow?.show();
   });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -58,6 +67,85 @@ app.whenReady().then(() => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  });
+
+  ipcMain.on('sendUrlList', async (_event, sourceUrlList: string[], targetUrlList: string[]) => {
+    const diffImageList: DiffImageList = [];
+    const diffPixelList: DiffPixelList = [];
+    const browser = await puppeteer.launch();
+
+    for (let index = 0; index < sourceUrlList.length; index++) {
+      const page = await browser.newPage();
+      await page.setViewport({ width: 1200, height: 1000 });
+
+      await page.goto(sourceUrlList[index], { waitUntil: ['networkidle0'] });
+
+      const tempDirectory = path.join(os.tmpdir(), 'webPageDiff-temp');
+
+      if (!fs.existsSync(tempDirectory)) {
+        fs.mkdirSync(tempDirectory);
+      }
+
+      await page.screenshot({
+        path: `${tempDirectory}${index}-source.png`,
+        fullPage: true
+      });
+
+      await page.goto(targetUrlList[index], { waitUntil: ['networkidle0'] });
+
+      await page.screenshot({
+        path: `${tempDirectory}${index}-target.png`,
+        fullPage: true
+      });
+
+      const sourceImage = await PNG.sync.read(
+        fs.readFileSync(`${tempDirectory}${index}-source.png`)
+      );
+      const targetImage = await PNG.sync.read(
+        fs.readFileSync(`${tempDirectory}${index}-target.png`)
+      );
+      const { width, height } = sourceImage;
+      const diffImage = new PNG({ width, height });
+      const { default: pixelmatch } = await import('pixelmatch');
+      const diffPixel = pixelmatch(
+        sourceImage.data,
+        targetImage.data,
+        diffImage.data,
+        width,
+        height,
+        {
+          threshold: 0.1
+        }
+      );
+
+      diffPixelList.push(diffPixel);
+
+      await new Promise<void>((resolve, reject) => {
+        const chunks: Buffer[] = [];
+
+        diffImage
+          .pack()
+          .on('data', (chunk) => {
+            chunks.push(chunk);
+          })
+          .on('end', () => {
+            try {
+              const buffer = Buffer.concat(chunks);
+              const base64Image = buffer.toString('base64');
+              diffImageList.push(base64Image);
+              resolve();
+            } catch (error) {
+              reject(error);
+            }
+          })
+          .on('error', reject);
+      });
+    }
+
+    await browser.close();
+
+    mainWindow?.webContents.send('onDiffImageList', diffImageList);
+    mainWindow?.webContents.send('onDiffPixelList', diffPixelList);
   });
 });
 
