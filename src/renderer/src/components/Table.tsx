@@ -4,9 +4,11 @@ type Props = {
   sourceUrlList: string[];
   targetUrlList: string[];
   diffPixelList: string[];
+  diffImageList: string[];
 };
 
-const Table: React.FC<Props> = ({ sourceUrlList, targetUrlList, diffPixelList }) => {
+// TODO: コンポーネント分割
+const Table: React.FC<Props> = ({ sourceUrlList, targetUrlList, diffPixelList, diffImageList }) => {
   const maxLength = Math.max(sourceUrlList.length, targetUrlList.length);
 
   return (
@@ -42,6 +44,9 @@ const Table: React.FC<Props> = ({ sourceUrlList, targetUrlList, diffPixelList })
           {Array.from({ length: maxLength }).map((_, index) => {
             const sourceUrl = sourceUrlList[index] || '';
             const targetUrl = targetUrlList[index] || '';
+            const handleClick = (): void => {
+              window.api.saveImage(diffImageList[index], index);
+            };
 
             return (
               <tr key={crypto.randomUUID()} className="odd:bg-gray-100 even:bg-white">
@@ -53,7 +58,11 @@ const Table: React.FC<Props> = ({ sourceUrlList, targetUrlList, diffPixelList })
                     <td className="border border-gray-300 px-4 py-2 text-center">
                       {`${diffPixelList[index]}px` || ''}
                     </td>
-                    <td className="border border-gray-300 px-4 py-2 text-center"></td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">
+                      <button type="button" onClick={handleClick}>
+                        保存
+                      </button>
+                    </td>
                   </>
                 )}
               </tr>

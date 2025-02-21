@@ -1,5 +1,5 @@
 import { electronApp, is, optimizer } from '@electron-toolkit/utils';
-import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import fs from 'fs';
 import os from 'os';
 import path, { join } from 'path';
@@ -69,7 +69,7 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 
-  ipcMain.on('sendUrlList', async (_event, sourceUrlList: string[], targetUrlList: string[]) => {
+  ipcMain.on('sendUrlList', async (_, sourceUrlList: string[], targetUrlList: string[]) => {
     const diffImageList: DiffImageList = [];
     const diffPixelList: DiffPixelList = [];
     const browser = await puppeteer.launch();
@@ -146,6 +146,25 @@ app.whenReady().then(() => {
 
     mainWindow?.webContents.send('onDiffImageList', diffImageList);
     mainWindow?.webContents.send('onDiffPixelList', diffPixelList);
+  });
+
+  ipcMain.on('saveImage', async (_, imageData, index) => {
+    const { filePath } = await dialog.showSaveDialog({
+      title: '画像を保存',
+      defaultPath: `No${index + 1}`,
+      filters: [{ name: 'Images', extensions: ['png', 'jpg', 'jpeg'] }]
+    });
+
+    if (filePath) {
+      const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
+      const buffer = Buffer.from(base64Data, 'base64');
+
+      fs.writeFile(filePath, buffer, (err) => {
+        if (err) {
+          console.error(err);
+        }
+      });
+    }
   });
 });
 

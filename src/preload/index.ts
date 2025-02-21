@@ -9,7 +9,8 @@ const api: Api = {
   onDiffImageList: (callback) =>
     ipcRenderer.on('onDiffImageList', (_event, diffPixelList) => callback(diffPixelList)),
   onDiffPixelList: (callback) =>
-    ipcRenderer.on('onDiffPixelList', (_event, diffPixelList) => callback(diffPixelList))
+    ipcRenderer.on('onDiffPixelList', (_event, diffPixelList) => callback(diffPixelList)),
+  saveImage: (imageData, index) => ipcRenderer.send('saveImage', imageData, index)
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to
