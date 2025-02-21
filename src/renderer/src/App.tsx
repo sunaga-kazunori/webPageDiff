@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Button from './components/Button';
+import ExecutionButton from './components/executionButton';
 import Table from './components/Table';
 import Textarea from './components/Textarea';
 
@@ -22,7 +22,7 @@ function App(): JSX.Element {
     setTargetUrlList(convertArray(targetUrlText));
   }, [targetUrlText]);
 
-  const onClick = (): void => {
+  const handleClick = (): void => {
     window.api.sendUrlList(sourceUrlList, targetUrlList);
   };
 
@@ -41,7 +41,9 @@ function App(): JSX.Element {
         <div className="p-5">
           <Textarea label="URLを入力" setUrlText={setSourceUrlText}></Textarea>
           <Textarea label="URLを入力" setUrlText={setTargetUrlText}></Textarea>
-          <Button onClick={onClick}>差分確認</Button>
+          <div className="mt-5">
+            <ExecutionButton handleClick={handleClick}>差分確認</ExecutionButton>
+          </div>
         </div>
         <div className="border-l-2 border-l-black">
           <Table
