@@ -11,6 +11,8 @@ function App(): JSX.Element {
   const [diffImageList, setDiffImageList] = useState<string[]>([]);
   const [diffPixelList, setDiffPixelList] = useState<string[]>([]);
   const [isLoading, setLoading] = useState(false);
+  const [hasCheckedDiff, setHasCheckedDiff] = useState(false);
+  const [isReset, setIsReset] = useState(false);
 
   const convertArray = (text: string): string[] =>
     text.split('\n').filter((url) => url.trim() !== '');
@@ -28,15 +30,30 @@ function App(): JSX.Element {
     window.api.sendUrlList(sourceUrlList, targetUrlList);
   };
 
+  const handleResetClick = (): void => {
+    setIsReset(true);
+    setHasCheckedDiff(false);
+  };
+
   useEffect(() => {
     window.api.onDiffImageList((_diffImageList) => {
       setDiffImageList(_diffImageList);
       setLoading(false);
+      setHasCheckedDiff(true);
     });
     window.api.onDiffPixelList((_diffPixelList) => {
       setDiffPixelList(_diffPixelList);
     });
   }, []);
+
+  useEffect(() => {
+    if (isReset) {
+      setSourceUrlText('');
+      setTargetUrlText('');
+      setDiffImageList([]);
+      setDiffPixelList([]);
+    }
+  }, [isReset]);
 
   return (
     <>
@@ -50,12 +67,30 @@ function App(): JSX.Element {
       ${isLoading ? 'after:pointer-events-auto after:opacity-70' : ''}`}
         {...(isLoading ? { inert: 'true' } : {})}
       >
-        <div className="p-5">
-          <Textarea label="URLを入力" setUrlText={setSourceUrlText}></Textarea>
-          <Textarea label="URLを入力" setUrlText={setTargetUrlText}></Textarea>
+        <div
+          className={`p-5 relative after:absolute after:top-0 after:right-0 after:bottom-0 after:left-0 after:pointer-events-none after:content-[''] after:bg-black after:opacity-0 after:transition-opacity after:duration-200
+        ${hasCheckedDiff ? 'after:pointer-events-auto after:opacity-70' : ''}`}
+        >
+          <Textarea
+            label="URLを入力"
+            setUrlText={setSourceUrlText}
+            isReset={isReset}
+            setIsReset={setIsReset}
+          ></Textarea>
+          <Textarea
+            label="URLを入力"
+            setUrlText={setTargetUrlText}
+            isReset={isReset}
+            setIsReset={setIsReset}
+          ></Textarea>
           <div className="mt-5">
             <ExecutionButton handleClick={handleClick}>差分確認</ExecutionButton>
           </div>
+          {hasCheckedDiff && (
+            <ExecutionButton handleClick={handleResetClick} className="relative z-10">
+              リセット
+            </ExecutionButton>
+          )}
         </div>
         <div className="border-l-2 border-l-black">
           <Table
@@ -63,7 +98,6 @@ function App(): JSX.Element {
             targetUrlList={targetUrlList}
             diffPixelList={diffPixelList}
             diffImageList={diffImageList}
-            setLoading={setLoading}
           ></Table>
         </div>
       </div>
