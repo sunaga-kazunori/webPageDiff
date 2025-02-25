@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import ErrorMessage from './components/ErrorMessage';
 import ExecutionButton from './components/executionButton';
 import Table from './components/Table';
 import Textarea from './components/Textarea';
@@ -13,6 +14,8 @@ function App(): JSX.Element {
   const [isLoading, setLoading] = useState(false);
   const [hasCheckedDiff, setHasCheckedDiff] = useState(false);
   const [isReset, setIsReset] = useState(false);
+  const [isSourceUrlError, setIsSourceUrlError] = useState(false);
+  const [isTargetUrlError, setIsTargetUrlError] = useState(false);
 
   const convertArray = (text: string): string[] =>
     text.split('\n').filter((url) => url.trim() !== '');
@@ -34,6 +37,8 @@ function App(): JSX.Element {
     setIsReset(true);
     setHasCheckedDiff(false);
   };
+
+  const URL_ERROR_MESSAGE_TEXT = '無効なURLが含まれています。もう一度確認してください。';
 
   useEffect(() => {
     window.api.onDiffImageList((_diffImageList) => {
@@ -73,16 +78,22 @@ function App(): JSX.Element {
         >
           <Textarea
             label="URLを入力"
+            urlList={sourceUrlList}
             setUrlText={setSourceUrlText}
             isReset={isReset}
             setIsReset={setIsReset}
+            setIsUrlError={setIsSourceUrlError}
           ></Textarea>
+          {isSourceUrlError && <ErrorMessage message={URL_ERROR_MESSAGE_TEXT}></ErrorMessage>}
           <Textarea
             label="URLを入力"
+            urlList={targetUrlList}
             setUrlText={setTargetUrlText}
             isReset={isReset}
             setIsReset={setIsReset}
+            setIsUrlError={setIsTargetUrlError}
           ></Textarea>
+          {isTargetUrlError && <ErrorMessage message={URL_ERROR_MESSAGE_TEXT}></ErrorMessage>}
           <div className="mt-5">
             <ExecutionButton handleClick={handleClick}>差分確認</ExecutionButton>
           </div>
