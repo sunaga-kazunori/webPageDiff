@@ -3,6 +3,7 @@ import ErrorMessage from './components/ErrorMessage';
 import ExecutionButton from './components/executionButton';
 import Table from './components/Table';
 import Textarea from './components/Textarea';
+import { convertArray } from './utilities/index';
 
 function App(): JSX.Element {
   const [sourceUrlText, setSourceUrlText] = useState('');
@@ -16,9 +17,6 @@ function App(): JSX.Element {
   const [isReset, setIsReset] = useState(false);
   const [isSourceUrlError, setIsSourceUrlError] = useState(false);
   const [isTargetUrlError, setIsTargetUrlError] = useState(false);
-
-  const convertArray = (text: string): string[] =>
-    text.split('\n').filter((url) => url.trim() !== '');
 
   useEffect(() => {
     setSourceUrlList(convertArray(sourceUrlText));
