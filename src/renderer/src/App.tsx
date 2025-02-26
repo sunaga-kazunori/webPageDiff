@@ -28,7 +28,65 @@ function App(): JSX.Element {
     setTargetUrlList(convertArray(targetUrlText));
   }, [targetUrlText]);
 
+  const errorUrlMessageText = {
+    mismatch: 'テキストエリアに入力されたURLの数が異なります。URLの数を揃えてください。',
+    invalidValue: '無効なURLが含まれています。もう一度確認してください。',
+    offline: 'ネットワークに接続されていません。インターネット接続を確認してください。',
+    empty: 'URLが入力されていません。もう一度確認してください。'
+  };
+
+  const checkOnlineStatus = (): boolean => {
+    if (!window.navigator.onLine) {
+      window.api.errorAlert(errorUrlMessageText.offline);
+
+      return false;
+    }
+
+    return true;
+  };
+
+  const checkUrlEmpty = (): boolean => {
+    if (sourceUrlList.length === 0 && targetUrlList.length === 0) {
+      window.api.errorAlert(errorUrlMessageText.empty);
+
+      return false;
+    }
+
+    return true;
+  };
+
+  const checkUrlMismatch = (): boolean => {
+    if (sourceUrlList.length !== targetUrlList.length) {
+      window.api.errorAlert(errorUrlMessageText.mismatch);
+
+      return false;
+    }
+
+    return true;
+  };
+
+  const checkUrlInvalidValue = (urls: string[]): boolean => {
+    for (const url of urls) {
+      if (!URL.canParse(url)) {
+        window.api.errorAlert(errorUrlMessageText.invalidValue);
+
+        return false;
+      }
+    }
+
+    return true;
+  };
+
   const handleClick = (): void => {
+    if (
+      !checkOnlineStatus() ||
+      !checkUrlEmpty() ||
+      !checkUrlMismatch() ||
+      !checkUrlInvalidValue([...sourceUrlList, ...targetUrlList])
+    ) {
+      return;
+    }
+
     setLoading(true);
     window.api.sendUrlList(sourceUrlList, targetUrlList);
   };
@@ -37,8 +95,6 @@ function App(): JSX.Element {
     setIsReset(true);
     setHasCheckedDiff(false);
   };
-
-  const URL_ERROR_MESSAGE_TEXT = '無効なURLが含まれています。もう一度確認してください。';
 
   useEffect(() => {
     window.api.onDiffImageList((_diffImageList) => {
@@ -84,7 +140,9 @@ function App(): JSX.Element {
             setIsReset={setIsReset}
             setIsUrlError={setIsSourceUrlError}
           ></Textarea>
-          {isSourceUrlError && <ErrorMessage message={URL_ERROR_MESSAGE_TEXT}></ErrorMessage>}
+          {isSourceUrlError && (
+            <ErrorMessage message={errorUrlMessageText.invalidValue}></ErrorMessage>
+          )}
           <Textarea
             label="URLを入力"
             urlList={targetUrlList}
@@ -93,7 +151,9 @@ function App(): JSX.Element {
             setIsReset={setIsReset}
             setIsUrlError={setIsTargetUrlError}
           ></Textarea>
-          {isTargetUrlError && <ErrorMessage message={URL_ERROR_MESSAGE_TEXT}></ErrorMessage>}
+          {isTargetUrlError && (
+            <ErrorMessage message={errorUrlMessageText.invalidValue}></ErrorMessage>
+          )}
           <div className="mt-5">
             <ExecutionButton handleClick={handleClick}>差分確認</ExecutionButton>
           </div>

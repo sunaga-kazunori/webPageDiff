@@ -166,6 +166,10 @@ app.whenReady().then(() => {
       });
     }
   });
+
+  ipcMain.handle('errorAlert', (_, message) => {
+    dialog.showErrorBox('', message);
+  });
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
