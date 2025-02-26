@@ -3,7 +3,8 @@ import ErrorMessage from './components/ErrorMessage';
 import ExecutionButton from './components/executionButton';
 import Table from './components/Table';
 import Textarea from './components/Textarea';
-import { convertArray } from './utilities/index';
+import { convertArray } from './utilities/common';
+import { validateForDiffCheck } from './utilities/validateForDiffCheck';
 
 function App(): JSX.Element {
   const [sourceUrlText, setSourceUrlText] = useState('');
@@ -26,62 +27,23 @@ function App(): JSX.Element {
     setTargetUrlList(convertArray(targetUrlText));
   }, [targetUrlText]);
 
-  const errorUrlMessageText = {
+  const errorMessages = {
     mismatch: 'テキストエリアに入力されたURLの数が異なります。URLの数を揃えてください。',
     invalidValue: '無効なURLが含まれています。もう一度確認してください。',
     offline: 'ネットワークに接続されていません。インターネット接続を確認してください。',
     empty: 'URLが入力されていません。もう一度確認してください。'
   };
 
-  const checkOnlineStatus = (): boolean => {
-    if (!window.navigator.onLine) {
-      window.api.errorAlert(errorUrlMessageText.offline);
-
-      return false;
-    }
-
-    return true;
-  };
-
-  const checkUrlEmpty = (): boolean => {
-    if (sourceUrlList.length === 0 && targetUrlList.length === 0) {
-      window.api.errorAlert(errorUrlMessageText.empty);
-
-      return false;
-    }
-
-    return true;
-  };
-
-  const checkUrlMismatch = (): boolean => {
-    if (sourceUrlList.length !== targetUrlList.length) {
-      window.api.errorAlert(errorUrlMessageText.mismatch);
-
-      return false;
-    }
-
-    return true;
-  };
-
-  const checkUrlInvalidValue = (urls: string[]): boolean => {
-    for (const url of urls) {
-      if (!URL.canParse(url)) {
-        window.api.errorAlert(errorUrlMessageText.invalidValue);
-
-        return false;
-      }
-    }
-
-    return true;
-  };
-
   const handleClick = (): void => {
-    if (
-      !checkOnlineStatus() ||
-      !checkUrlEmpty() ||
-      !checkUrlMismatch() ||
-      !checkUrlInvalidValue([...sourceUrlList, ...targetUrlList])
-    ) {
+    const { isValid, errorMessage } = validateForDiffCheck(
+      sourceUrlList,
+      targetUrlList,
+      errorMessages
+    );
+
+    if (!isValid && errorMessage) {
+      window.api.errorAlert(errorMessage);
+
       return;
     }
 
@@ -138,9 +100,7 @@ function App(): JSX.Element {
             setIsReset={setIsReset}
             setIsUrlError={setIsSourceUrlError}
           ></Textarea>
-          {isSourceUrlError && (
-            <ErrorMessage message={errorUrlMessageText.invalidValue}></ErrorMessage>
-          )}
+          {isSourceUrlError && <ErrorMessage message={errorMessages.invalidValue}></ErrorMessage>}
           <Textarea
             label="URLを入力"
             urlList={targetUrlList}
@@ -149,9 +109,7 @@ function App(): JSX.Element {
             setIsReset={setIsReset}
             setIsUrlError={setIsTargetUrlError}
           ></Textarea>
-          {isTargetUrlError && (
-            <ErrorMessage message={errorUrlMessageText.invalidValue}></ErrorMessage>
-          )}
+          {isTargetUrlError && <ErrorMessage message={errorMessages.invalidValue}></ErrorMessage>}
           <div className="mt-5">
             <ExecutionButton handleClick={handleClick}>差分確認</ExecutionButton>
           </div>
