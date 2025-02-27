@@ -31,13 +31,13 @@ function App(): JSX.Element {
 
   const { isReset, reset } = useReset(_reset);
 
-  const handleClick = (): void => {
-    const { isValid, errorMessage } = validateForDiffCheck(
-      sourceUrlState.urlList,
-      targetUrlState.urlList,
-      errorMessages
-    );
+  const { isValid, errorMessage } = validateForDiffCheck(
+    sourceUrlState.urlList,
+    targetUrlState.urlList,
+    errorMessages
+  );
 
+  const handleCheckedDiffClick = (): void => {
     if (!isValid && errorMessage) {
       window.api.errorAlert(errorMessage);
 
@@ -86,7 +86,7 @@ function App(): JSX.Element {
             isReset={isReset}
           ></Textarea>
           <div className="mt-5">
-            <ExecutionButton handleClick={handleClick}>差分確認</ExecutionButton>
+            <ExecutionButton handleClick={handleCheckedDiffClick}>差分確認</ExecutionButton>
           </div>
           {hasCheckedDiff && (
             <ExecutionButton handleClick={reset} className="relative z-10">
