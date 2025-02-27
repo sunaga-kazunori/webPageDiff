@@ -2,27 +2,17 @@ import { useEffect, useState } from 'react';
 import ExecutionButton from './components/executionButton';
 import Table from './components/Table';
 import Textarea from './components/Textarea';
-import { convertArray } from './utilities/common';
+import { useUrlList } from './hooks/useUrlList';
 import { validateForDiffCheck } from './utilities/validateForDiffCheck';
 
 function App(): JSX.Element {
-  const [sourceUrlText, setSourceUrlText] = useState('');
-  const [targetUrlText, setTargetUrlText] = useState('');
-  const [sourceUrlList, setSourceUrlList] = useState<string[]>([]);
-  const [targetUrlList, setTargetUrlList] = useState<string[]>([]);
   const [diffImageList, setDiffImageList] = useState<string[]>([]);
   const [diffPixelList, setDiffPixelList] = useState<string[]>([]);
   const [isLoading, setLoading] = useState(false);
   const [hasCheckedDiff, setHasCheckedDiff] = useState(false);
+  const sourceUrlState = useUrlList();
+  const targetUrlState = useUrlList();
   const [isReset, setIsReset] = useState(false);
-
-  useEffect(() => {
-    setSourceUrlList(convertArray(sourceUrlText));
-  }, [sourceUrlText]);
-
-  useEffect(() => {
-    setTargetUrlList(convertArray(targetUrlText));
-  }, [targetUrlText]);
 
   const errorMessages = {
     mismatch: 'テキストエリアに入力されたURLの数が異なります。URLの数を揃えてください。',
@@ -33,8 +23,8 @@ function App(): JSX.Element {
 
   const handleClick = (): void => {
     const { isValid, errorMessage } = validateForDiffCheck(
-      sourceUrlList,
-      targetUrlList,
+      sourceUrlState.urlList,
+      targetUrlState.urlList,
       errorMessages
     );
 
@@ -45,7 +35,7 @@ function App(): JSX.Element {
     }
 
     setLoading(true);
-    window.api.sendUrlList(sourceUrlList, targetUrlList);
+    window.api.sendUrlList(sourceUrlState.urlList, targetUrlState.urlList);
   };
 
   const handleResetClick = (): void => {
@@ -66,8 +56,8 @@ function App(): JSX.Element {
 
   useEffect(() => {
     if (isReset) {
-      setSourceUrlText('');
-      setTargetUrlText('');
+      sourceUrlState.setUrlText('');
+      targetUrlState.setUrlText('');
       setDiffImageList([]);
       setDiffPixelList([]);
     }
@@ -91,13 +81,13 @@ function App(): JSX.Element {
         >
           <Textarea
             label="URLを入力"
-            setUrlText={setSourceUrlText}
+            setUrlText={sourceUrlState.setUrlText}
             isReset={isReset}
             setIsReset={setIsReset}
           ></Textarea>
           <Textarea
             label="URLを入力"
-            setUrlText={setTargetUrlText}
+            setUrlText={targetUrlState.setUrlText}
             isReset={isReset}
             setIsReset={setIsReset}
           ></Textarea>
@@ -112,8 +102,8 @@ function App(): JSX.Element {
         </div>
         <div className="border-l-2 border-l-black">
           <Table
-            sourceUrlList={sourceUrlList}
-            targetUrlList={targetUrlList}
+            sourceUrlList={sourceUrlState.urlList}
+            targetUrlList={targetUrlState.urlList}
             diffPixelList={diffPixelList}
             diffImageList={diffImageList}
           ></Table>
