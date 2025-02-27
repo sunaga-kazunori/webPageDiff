@@ -1,4 +1,5 @@
 import React from 'react';
+import SaveButton from './SaveButton';
 
 type Props = {
   sourceUrlList: string[];
@@ -7,7 +8,6 @@ type Props = {
   diffImageList: string[];
 };
 
-// TODO: コンポーネント分割
 const Table: React.FC<Props> = ({ sourceUrlList, targetUrlList, diffPixelList, diffImageList }) => {
   const maxLength = Math.max(sourceUrlList.length, targetUrlList.length);
 
@@ -59,9 +59,7 @@ const Table: React.FC<Props> = ({ sourceUrlList, targetUrlList, diffPixelList, d
                       {`${diffPixelList[index]}px` || ''}
                     </td>
                     <td className="border border-gray-300 px-4 py-2 text-center">
-                      <button type="button" onClick={handleClick}>
-                        保存
-                      </button>
+                      <SaveButton label="保存" handleClick={handleClick}></SaveButton>
                     </td>
                   </>
                 )}
