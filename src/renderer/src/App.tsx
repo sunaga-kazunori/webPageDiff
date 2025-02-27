@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import ExecutionButton from './components/executionButton';
 import Table from './components/Table';
 import Textarea from './components/Textarea';
+import { useReset } from './hooks/useReset';
 import { useUrlList } from './hooks/useUrlList';
 import { validateForDiffCheck } from './utilities/validateForDiffCheck';
 
@@ -12,7 +13,6 @@ function App(): JSX.Element {
   const [hasCheckedDiff, setHasCheckedDiff] = useState(false);
   const sourceUrlState = useUrlList();
   const targetUrlState = useUrlList();
-  const [isReset, setIsReset] = useState(false);
 
   const errorMessages = {
     mismatch: 'テキストエリアに入力されたURLの数が異なります。URLの数を揃えてください。',
@@ -20,6 +20,16 @@ function App(): JSX.Element {
     offline: 'ネットワークに接続されていません。インターネット接続を確認してください。',
     empty: 'URLが入力されていません。もう一度確認してください。'
   };
+
+  const _reset = (): void => {
+    setHasCheckedDiff(false);
+    sourceUrlState.setUrlText('');
+    targetUrlState.setUrlText('');
+    setDiffImageList([]);
+    setDiffPixelList([]);
+  };
+
+  const { isReset, reset } = useReset(_reset);
 
   const handleClick = (): void => {
     const { isValid, errorMessage } = validateForDiffCheck(
@@ -38,11 +48,6 @@ function App(): JSX.Element {
     window.api.sendUrlList(sourceUrlState.urlList, targetUrlState.urlList);
   };
 
-  const handleResetClick = (): void => {
-    setIsReset(true);
-    setHasCheckedDiff(false);
-  };
-
   useEffect(() => {
     window.api.onDiffImageList((_diffImageList) => {
       setDiffImageList(_diffImageList);
@@ -53,15 +58,6 @@ function App(): JSX.Element {
       setDiffPixelList(_diffPixelList);
     });
   }, []);
-
-  useEffect(() => {
-    if (isReset) {
-      sourceUrlState.setUrlText('');
-      targetUrlState.setUrlText('');
-      setDiffImageList([]);
-      setDiffPixelList([]);
-    }
-  }, [isReset]);
 
   return (
     <>
@@ -83,19 +79,17 @@ function App(): JSX.Element {
             label="URLを入力"
             setUrlText={sourceUrlState.setUrlText}
             isReset={isReset}
-            setIsReset={setIsReset}
           ></Textarea>
           <Textarea
             label="URLを入力"
             setUrlText={targetUrlState.setUrlText}
             isReset={isReset}
-            setIsReset={setIsReset}
           ></Textarea>
           <div className="mt-5">
             <ExecutionButton handleClick={handleClick}>差分確認</ExecutionButton>
           </div>
           {hasCheckedDiff && (
-            <ExecutionButton handleClick={handleResetClick} className="relative z-10">
+            <ExecutionButton handleClick={reset} className="relative z-10">
               リセット
             </ExecutionButton>
           )}
