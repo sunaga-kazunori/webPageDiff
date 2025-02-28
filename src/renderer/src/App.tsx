@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import ExecutionButton from './components/executionButton';
+import TabItem from './components/TabItem';
 import Table from './components/Table';
+import Tabs from './components/Tabs';
 import Textarea from './components/Textarea';
 import { useReset } from './hooks/useReset';
 import { useUrlList } from './hooks/useUrlList';
@@ -75,16 +77,22 @@ function App(): JSX.Element {
           className={`p-5 relative after:absolute after:top-0 after:right-0 after:bottom-0 after:left-0 after:pointer-events-none after:content-[''] after:bg-black after:opacity-0 after:transition-opacity after:duration-200
         ${hasCheckedDiff ? 'after:pointer-events-auto after:opacity-70' : ''}`}
         >
-          <Textarea
-            label="URLを入力"
-            setUrlText={sourceUrlState.setUrlText}
-            isReset={isReset}
-          ></Textarea>
-          <Textarea
-            label="URLを入力"
-            setUrlText={targetUrlState.setUrlText}
-            isReset={isReset}
-          ></Textarea>
+          <Tabs>
+            <TabItem label="Source URL">
+              <Textarea
+                label="Source URLを入力"
+                setUrlText={sourceUrlState.setUrlText}
+                isReset={isReset}
+              ></Textarea>
+            </TabItem>
+            <TabItem label="Target URL">
+              <Textarea
+                label="Target URLを入力"
+                setUrlText={targetUrlState.setUrlText}
+                isReset={isReset}
+              ></Textarea>
+            </TabItem>
+          </Tabs>
           <div className="mt-5">
             <ExecutionButton handleClick={handleCheckedDiffClick}>差分確認</ExecutionButton>
           </div>
