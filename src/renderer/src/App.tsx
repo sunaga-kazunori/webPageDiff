@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import BasicAuthenticationInput from './components/BasicAuthenticationInput';
 import ExecutionButton from './components/executionButton';
 import TabItem from './components/TabItem';
 import Table from './components/Table';
@@ -16,6 +17,10 @@ function App(): JSX.Element {
   const [isLoading, setLoading] = useState(false);
   const [hasCheckedDiff, setHasCheckedDiff] = useState(false);
   const [viewPortSize, setViewPortSize] = useState(DEFAULT_VIEWPORT_SIZE);
+  const [sourceUrlUsername, setSourceUrlUsername] = useState('');
+  const [sourceUrlPassword, setSourceUrlPassword] = useState('');
+  const [targetUrlUsername, setTargetUrlUsername] = useState('');
+  const [targetUrlPassword, setTargetUrlPassword] = useState('');
   const sourceUrlState = useUrlList();
   const targetUrlState = useUrlList();
 
@@ -53,8 +58,24 @@ function App(): JSX.Element {
       return;
     }
 
+    const basicAuthentication = {
+      sourceUrl: {
+        userName: sourceUrlUsername,
+        password: sourceUrlPassword
+      },
+      targetUrl: {
+        userName: targetUrlUsername,
+        password: targetUrlPassword
+      }
+    };
+
     setLoading(true);
-    window.api.sendUrlList(sourceUrlState.urlList, targetUrlState.urlList, viewPortSize);
+    window.api.sendUrlList(
+      sourceUrlState.urlList,
+      targetUrlState.urlList,
+      viewPortSize,
+      basicAuthentication
+    );
   };
 
   useEffect(() => {
@@ -96,6 +117,16 @@ function App(): JSX.Element {
                 setUrlText={sourceUrlState.setUrlText}
                 isReset={isReset}
               ></Textarea>
+              <BasicAuthenticationInput
+                label="ユーザー名"
+                setText={setSourceUrlUsername}
+                isReset={isReset}
+              ></BasicAuthenticationInput>
+              <BasicAuthenticationInput
+                label="パスワード"
+                setText={setSourceUrlPassword}
+                isReset={isReset}
+              ></BasicAuthenticationInput>
             </TabItem>
             <TabItem label="Target URL">
               <Textarea
@@ -103,6 +134,16 @@ function App(): JSX.Element {
                 setUrlText={targetUrlState.setUrlText}
                 isReset={isReset}
               ></Textarea>
+              <BasicAuthenticationInput
+                label="ユーザー名"
+                setText={setTargetUrlUsername}
+                isReset={isReset}
+              ></BasicAuthenticationInput>
+              <BasicAuthenticationInput
+                label="パスワード"
+                setText={setTargetUrlPassword}
+                isReset={isReset}
+              ></BasicAuthenticationInput>
             </TabItem>
           </Tabs>
           <div className="mt-5">

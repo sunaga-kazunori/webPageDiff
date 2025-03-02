@@ -6,6 +6,7 @@ import path, { join } from 'path';
 import { PNG } from 'pngjs';
 import puppeteer from 'puppeteer';
 import icon from '../../resources/icon.png?asset';
+import { BasicAuthentication } from '../preload/types';
 
 type DiffImageList = string[];
 type DiffPixelList = string[];
@@ -71,14 +72,28 @@ app.whenReady().then(() => {
 
   ipcMain.on(
     'sendUrlList',
-    async (_, sourceUrlList: string[], targetUrlList: string[], viewPortSize: number) => {
+    async (
+      _,
+      sourceUrlList: string[],
+      targetUrlList: string[],
+      viewPortSize: number,
+      basicAuthentication: BasicAuthentication
+    ) => {
       const diffImageList: DiffImageList = [];
       const diffPixelList: DiffPixelList = [];
+      const sourceUrlUserName = basicAuthentication.sourceUrl.userName;
+      const sourceUrlUserPassword = basicAuthentication.sourceUrl.password;
+      const targetUrlUserName = basicAuthentication.targetUrl.userName;
+      const targetUrlUserPassword = basicAuthentication.targetUrl.password;
       const browser = await puppeteer.launch();
 
       for (let index = 0; index < sourceUrlList.length; index++) {
         const page = await browser.newPage();
         await page.setViewport({ width: viewPortSize, height: 1000 });
+
+        if (sourceUrlUserName && sourceUrlUserPassword) {
+          await page.authenticate({ username: sourceUrlUserName, password: sourceUrlUserPassword });
+        }
 
         await page.goto(sourceUrlList[index], { waitUntil: ['networkidle0'] });
 
@@ -92,6 +107,10 @@ app.whenReady().then(() => {
           path: `${tempDirectory}${index}-source.png`,
           fullPage: true
         });
+
+        if (targetUrlUserName && targetUrlUserPassword) {
+          await page.authenticate({ username: targetUrlUserName, password: targetUrlUserPassword });
+        }
 
         await page.goto(targetUrlList[index], { waitUntil: ['networkidle0'] });
 

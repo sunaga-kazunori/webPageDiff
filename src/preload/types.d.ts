@@ -1,7 +1,23 @@
 import { ElectronAPI } from '@electron-toolkit/preload';
 
+type BasicAuthentication = {
+  sourceUrl: {
+    userName: string;
+    password: string;
+  };
+  targetUrl: {
+    userName: string;
+    password: string;
+  };
+};
+
 export type Api = {
-  sendUrlList: (sourceUrlList: string[], targetUrlList: string[], viewPortSize: number) => void;
+  sendUrlList: (
+    sourceUrlList: string[],
+    targetUrlList: string[],
+    viewPortSize: number,
+    basicAuthentication: BasicAuthentication
+  ) => void;
   onDiffImageList: (callback: (diffPixelList: string[]) => void) => void;
   onDiffPixelList: (callback: (diffPixelList: string[]) => void) => void;
   saveImage: (ImageData: Base64, index: number) => void;
