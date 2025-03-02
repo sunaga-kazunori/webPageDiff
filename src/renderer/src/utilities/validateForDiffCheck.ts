@@ -10,10 +10,15 @@ type ValidationResult = {
 export const validateForDiffCheck = (
   sourceUrlList: string[],
   targetUrlList: string[],
+  viewPortSize: number,
   errorMessages: ErrorMessages
 ): ValidationResult => {
   if (!window.navigator.onLine) {
     return { isValid: false, errorMessage: errorMessages.offline };
+  }
+
+  if (viewPortSize < 200 || viewPortSize > 10000) {
+    return { isValid: false, errorMessage: errorMessages.invalidViewPortSize };
   }
 
   if (sourceUrlList.length === 0 && targetUrlList.length === 0) {

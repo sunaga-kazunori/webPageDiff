@@ -4,15 +4,18 @@ import TabItem from './components/TabItem';
 import Table from './components/Table';
 import Tabs from './components/Tabs';
 import Textarea from './components/Textarea';
+import ViewPortSizeInput from './components/ViewPortSizeInput';
 import { useReset } from './hooks/useReset';
 import { useUrlList } from './hooks/useUrlList';
 import { validateForDiffCheck } from './utilities/validateForDiffCheck';
 
 function App(): JSX.Element {
+  const DEFAULT_VIEWPORT_SIZE = 1280;
   const [diffImageList, setDiffImageList] = useState<string[]>([]);
   const [diffPixelList, setDiffPixelList] = useState<string[]>([]);
   const [isLoading, setLoading] = useState(false);
   const [hasCheckedDiff, setHasCheckedDiff] = useState(false);
+  const [viewPortSize, setViewPortSize] = useState(DEFAULT_VIEWPORT_SIZE);
   const sourceUrlState = useUrlList();
   const targetUrlState = useUrlList();
 
@@ -20,11 +23,14 @@ function App(): JSX.Element {
     mismatch: 'テキストエリアに入力されたURLの数が異なります。URLの数を揃えてください。',
     invalidValue: '無効なURLが含まれています。もう一度確認してください。',
     offline: 'ネットワークに接続されていません。インターネット接続を確認してください。',
-    empty: 'URLが入力されていません。もう一度確認してください。'
+    empty: 'URLが入力されていません。もう一度確認してください。',
+    invalidViewPortSize:
+      '入力されたビューポート幅は無効な値です。値は200を超え、かつ10000未満である必要があります。再度正しい値を入力してください。'
   };
 
   const _reset = (): void => {
     setHasCheckedDiff(false);
+    setViewPortSize(DEFAULT_VIEWPORT_SIZE);
     sourceUrlState.setUrlText('');
     targetUrlState.setUrlText('');
     setDiffImageList([]);
@@ -36,6 +42,7 @@ function App(): JSX.Element {
   const { isValid, errorMessage } = validateForDiffCheck(
     sourceUrlState.urlList,
     targetUrlState.urlList,
+    viewPortSize,
     errorMessages
   );
 
@@ -47,7 +54,7 @@ function App(): JSX.Element {
     }
 
     setLoading(true);
-    window.api.sendUrlList(sourceUrlState.urlList, targetUrlState.urlList);
+    window.api.sendUrlList(sourceUrlState.urlList, targetUrlState.urlList, viewPortSize);
   };
 
   useEffect(() => {
@@ -77,6 +84,11 @@ function App(): JSX.Element {
           className={`p-5 relative after:absolute after:top-0 after:right-0 after:bottom-0 after:left-0 after:pointer-events-none after:content-[''] after:bg-black after:opacity-0 after:transition-opacity after:duration-200
         ${hasCheckedDiff ? 'after:pointer-events-auto after:opacity-70' : ''}`}
         >
+          <ViewPortSizeInput
+            label="差分画像のビューポート幅を入力"
+            viewPortSize={viewPortSize}
+            setViewPortSize={setViewPortSize}
+          ></ViewPortSizeInput>
           <Tabs>
             <TabItem label="Source URL">
               <Textarea

@@ -4,8 +4,8 @@ import { Api } from './types';
 
 // Custom APIs for renderer
 const api: Api = {
-  sendUrlList: (sourceUrlList: string[], targetUrlList: string[]) =>
-    ipcRenderer.send('sendUrlList', sourceUrlList, targetUrlList),
+  sendUrlList: (sourceUrlList: string[], targetUrlList: string[], viewPortSize: number) =>
+    ipcRenderer.send('sendUrlList', sourceUrlList, targetUrlList, viewPortSize),
   onDiffImageList: (callback) =>
     ipcRenderer.on('onDiffImageList', (_event, diffPixelList) => callback(diffPixelList)),
   onDiffPixelList: (callback) =>
