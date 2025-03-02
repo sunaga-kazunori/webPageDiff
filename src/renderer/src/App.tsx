@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import BasicAuthenticationInput from './components/BasicAuthenticationInput';
+import CheckboxToggle from './components/CheckboxToggle';
 import ExecutionButton from './components/executionButton';
 import TabItem from './components/TabItem';
 import Table from './components/Table';
@@ -21,6 +22,10 @@ function App(): JSX.Element {
   const [sourceUrlPassword, setSourceUrlPassword] = useState('');
   const [targetUrlUsername, setTargetUrlUsername] = useState('');
   const [targetUrlPassword, setTargetUrlPassword] = useState('');
+  const [isCheckedSourceUrlBasicAuthentication, setIsCheckedSourceUrlBasicAuthentication] =
+    useState(false);
+  const [isCheckedTargetUrlBasicAuthentication, setIsCheckedTargetUrlBasicAuthentication] =
+    useState(false);
   const sourceUrlState = useUrlList();
   const targetUrlState = useUrlList();
 
@@ -89,6 +94,11 @@ function App(): JSX.Element {
     });
   }, []);
 
+  useEffect(() => {
+    setSourceUrlUsername('');
+    setTargetUrlUsername('');
+  }, [isCheckedSourceUrlBasicAuthentication]);
+
   return (
     <>
       {isLoading && (
@@ -117,16 +127,24 @@ function App(): JSX.Element {
                 setUrlText={sourceUrlState.setUrlText}
                 isReset={isReset}
               ></Textarea>
-              <BasicAuthenticationInput
-                label="ユーザー名"
-                setText={setSourceUrlUsername}
-                isReset={isReset}
-              ></BasicAuthenticationInput>
-              <BasicAuthenticationInput
-                label="パスワード"
-                setText={setSourceUrlPassword}
-                isReset={isReset}
-              ></BasicAuthenticationInput>
+              <CheckboxToggle
+                label="BASIC認証"
+                isChecked={isCheckedSourceUrlBasicAuthentication}
+                setIsChecked={setIsCheckedSourceUrlBasicAuthentication}
+              >
+                <BasicAuthenticationInput
+                  label="ユーザー名"
+                  setText={setSourceUrlUsername}
+                  isChecked={isCheckedSourceUrlBasicAuthentication}
+                  value={sourceUrlUsername}
+                ></BasicAuthenticationInput>
+                <BasicAuthenticationInput
+                  label="パスワード"
+                  setText={setSourceUrlPassword}
+                  isChecked={isCheckedSourceUrlBasicAuthentication}
+                  value={sourceUrlPassword}
+                ></BasicAuthenticationInput>
+              </CheckboxToggle>
             </TabItem>
             <TabItem label="Target URL">
               <Textarea
@@ -134,16 +152,24 @@ function App(): JSX.Element {
                 setUrlText={targetUrlState.setUrlText}
                 isReset={isReset}
               ></Textarea>
-              <BasicAuthenticationInput
-                label="ユーザー名"
-                setText={setTargetUrlUsername}
-                isReset={isReset}
-              ></BasicAuthenticationInput>
-              <BasicAuthenticationInput
-                label="パスワード"
-                setText={setTargetUrlPassword}
-                isReset={isReset}
-              ></BasicAuthenticationInput>
+              <CheckboxToggle
+                label="BASIC認証"
+                isChecked={isCheckedTargetUrlBasicAuthentication}
+                setIsChecked={setIsCheckedTargetUrlBasicAuthentication}
+              >
+                <BasicAuthenticationInput
+                  label="ユーザー名"
+                  setText={setTargetUrlUsername}
+                  isChecked={isCheckedTargetUrlBasicAuthentication}
+                  value={targetUrlUsername}
+                ></BasicAuthenticationInput>
+                <BasicAuthenticationInput
+                  label="パスワード"
+                  setText={setTargetUrlPassword}
+                  isChecked={isCheckedTargetUrlBasicAuthentication}
+                  value={targetUrlPassword}
+                ></BasicAuthenticationInput>
+              </CheckboxToggle>
             </TabItem>
           </Tabs>
           <div className="mt-5">

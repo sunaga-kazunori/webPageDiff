@@ -3,11 +3,12 @@ import React, { Dispatch, SetStateAction } from 'react';
 type Props = {
   label: string;
   setText: Dispatch<SetStateAction<string>>;
-  isReset: boolean;
+  isChecked: boolean;
+  value: string;
 };
 
-const BasicAuthenticationInput: React.FC<Props> = ({ label, setText, isReset }) => {
-  const handleBlur = (event: React.FocusEvent<HTMLInputElement>): void => {
+const BasicAuthenticationInput: React.FC<Props> = ({ label, setText, value }) => {
+  const handleChange = (event: React.FocusEvent<HTMLInputElement>): void => {
     setText(event.target.value);
   };
 
@@ -16,8 +17,8 @@ const BasicAuthenticationInput: React.FC<Props> = ({ label, setText, isReset }) 
       {label}
       <input
         type="text"
-        {...(isReset ? { value: '' } : {})}
-        onBlur={handleBlur}
+        value={value}
+        onChange={handleChange}
         className="border border-black"
       ></input>
     </label>
