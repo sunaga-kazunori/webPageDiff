@@ -9,6 +9,7 @@ const Tabs: React.FC<Props> = ({ children, defaultIndex = 0 }: Props) => {
   const [activeIndex, setActiveIndex] = useState(defaultIndex);
   const randomString = useMemo(() => `tab-${crypto.randomUUID()}`, []);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const isInitialRender = useRef(true);
   const handleClick = (index: number): void => {
     setActiveIndex(index);
   };
@@ -38,8 +39,11 @@ const Tabs: React.FC<Props> = ({ children, defaultIndex = 0 }: Props) => {
   };
 
   useEffect(() => {
-    if (tabRefs.current[activeIndex]) {
-      tabRefs.current[activeIndex].focus();
+    // 初回レンダリングではフォーカスを当てない
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+    } else if (tabRefs.current[activeIndex]) {
+      tabRefs.current[activeIndex]?.focus();
     }
   }, [activeIndex]);
 
