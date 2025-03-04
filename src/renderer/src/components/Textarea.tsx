@@ -2,11 +2,12 @@ import React, { ChangeEvent, Dispatch, SetStateAction } from 'react';
 
 type Props = {
   label: string;
+  urlText: string;
   setUrlText: Dispatch<SetStateAction<string>>;
   isReset: boolean;
 };
 
-const Textarea: React.FC<Props> = ({ label, setUrlText, isReset }) => {
+const Textarea: React.FC<Props> = ({ label, urlText, setUrlText }) => {
   const handleChange = (event: ChangeEvent): void => {
     if (!(event.target instanceof HTMLTextAreaElement)) {
       throw new TypeError();
@@ -21,7 +22,7 @@ const Textarea: React.FC<Props> = ({ label, setUrlText, isReset }) => {
       <textarea
         className="border border-gray-400 h-40 rounded-sm mt-1 p-1"
         onChange={handleChange}
-        {...(isReset ? { value: '' } : {})}
+        value={urlText}
       ></textarea>
     </label>
   );

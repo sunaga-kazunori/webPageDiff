@@ -119,6 +119,7 @@ function App(): JSX.Element {
             <TabItem label="Source URL">
               <Textarea
                 label="Source URLを入力"
+                urlText={sourceUrlState.urlText}
                 setUrlText={sourceUrlState.setUrlText}
                 isReset={isReset}
               ></Textarea>
@@ -144,6 +145,7 @@ function App(): JSX.Element {
             <TabItem label="Target URL">
               <Textarea
                 label="Target URLを入力"
+                urlText={targetUrlState.urlText}
                 setUrlText={targetUrlState.setUrlText}
                 isReset={isReset}
               ></Textarea>
