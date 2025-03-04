@@ -23,10 +23,10 @@ const Textarea: React.FC<Props> = ({ label, viewPortSize, setViewPortSize }) => 
   return (
     <label className="flex flex-col">
       {label}
-      <span className="flex">
+      <span className="flex items-center">
         <input
           type="number"
-          className="border border-black"
+          className="border border-gray-400 rounded-sm mr-1 mt-1 p-1"
           onChange={handleChange}
           value={viewPortSize === 0 ? '' : viewPortSize}
           min="200"

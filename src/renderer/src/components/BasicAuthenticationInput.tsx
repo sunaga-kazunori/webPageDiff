@@ -13,13 +13,13 @@ const BasicAuthenticationInput: React.FC<Props> = ({ label, setText, value }) =>
   };
 
   return (
-    <label className="flex flex-col">
+    <label className="flex flex-col mt-2">
       {label}
       <input
         type="text"
         value={value}
         onChange={handleChange}
-        className="border border-black"
+        className="border border-gray-400 rounded-sm mt-1"
       ></input>
     </label>
   );

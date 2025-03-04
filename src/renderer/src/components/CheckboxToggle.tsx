@@ -13,13 +13,18 @@ const CheckboxToggle: React.FC<Props> = ({ label, children, isChecked, setIsChec
   };
 
   return (
-    <div>
+    <div className="mt-4">
       <label>
-        <input type="checkbox" checked={isChecked} onChange={handleCheckboxChange} />
-        {label}
+        <input
+          type="checkbox"
+          checked={isChecked}
+          onChange={handleCheckboxChange}
+          className="mr-1"
+        />
+        <span className="font-bold">{label}</span>
       </label>
 
-      {isChecked && children}
+      {isChecked && <div className="mt-2">{children}</div>}
     </div>
   );
 };

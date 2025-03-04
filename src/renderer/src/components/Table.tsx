@@ -4,7 +4,7 @@ import SaveButton from './SaveButton';
 type Props = {
   sourceUrlList: string[];
   targetUrlList: string[];
-  diffPixelList: string[];
+  diffPixelList: number[];
   diffImageList: string[];
 };
 
@@ -33,7 +33,7 @@ const Table: React.FC<Props> = ({ sourceUrlList, targetUrlList, diffPixelList, d
             <th className="border border-gray-300 px-4 py-2">Target URL</th>
             {diffPixelList.length !== 0 && (
               <>
-                <th className="border border-gray-300 px-4 py-2">差分量</th>
+                <th className="border border-gray-300 px-4 py-2">差分量（px）</th>
                 <th className="border border-gray-300 px-4 py-2">差分画像</th>
               </>
             )}
@@ -51,12 +51,18 @@ const Table: React.FC<Props> = ({ sourceUrlList, targetUrlList, diffPixelList, d
             return (
               <tr key={crypto.randomUUID()} className="odd:bg-gray-100 even:bg-white">
                 <td className="border border-gray-300 px-4 py-2 text-center">{index + 1}</td>
-                <td className="border border-gray-300 px-4 py-2">{sourceUrl}</td>
-                <td className="border border-gray-300 px-4 py-2">{targetUrl}</td>
+                <td className="border border-gray-300 px-4 py-2 break-all">{sourceUrl}</td>
+                <td className="border border-gray-300 px-4 py-2 break-all">{targetUrl}</td>
                 {diffPixelList.length !== 0 && (
                   <>
                     <td className="border border-gray-300 px-4 py-2 text-center">
-                      {`${diffPixelList[index]}px` || ''}
+                      {diffPixelList[index] === 0 ? (
+                        '0'
+                      ) : (
+                        <>
+                          <strong className="font-bold text-red-500">{diffPixelList[index]}</strong>
+                        </>
+                      )}
                     </td>
                     <td className="border border-gray-300 px-4 py-2 text-center">
                       <SaveButton label="保存" handleClick={handleClick}></SaveButton>

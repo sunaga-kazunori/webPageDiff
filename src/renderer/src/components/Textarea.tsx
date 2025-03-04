@@ -17,9 +17,9 @@ const Textarea: React.FC<Props> = ({ label, setUrlText, isReset }) => {
 
   return (
     <label className="flex flex-col">
-      {label}
+      <span className="font-bold">{label}</span>
       <textarea
-        className="border border-black"
+        className="border border-gray-400 h-40 rounded-sm mt-1 p-1"
         onChange={handleChange}
         {...(isReset ? { value: '' } : {})}
       ></textarea>

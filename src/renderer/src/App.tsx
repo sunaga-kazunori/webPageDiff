@@ -14,7 +14,7 @@ import { validateForDiffCheck } from './utilities/validateForDiffCheck';
 function App(): JSX.Element {
   const DEFAULT_VIEWPORT_SIZE = 1280;
   const [diffImageList, setDiffImageList] = useState<string[]>([]);
-  const [diffPixelList, setDiffPixelList] = useState<string[]>([]);
+  const [diffPixelList, setDiffPixelList] = useState<number[]>([]);
   const [isLoading, setLoading] = useState(false);
   const [hasCheckedDiff, setHasCheckedDiff] = useState(false);
   const [viewPortSize, setViewPortSize] = useState(DEFAULT_VIEWPORT_SIZE);
@@ -115,11 +115,6 @@ function App(): JSX.Element {
           className={`p-5 relative after:absolute after:top-0 after:right-0 after:bottom-0 after:left-0 after:pointer-events-none after:content-[''] after:bg-black after:opacity-0 after:transition-opacity after:duration-200
         ${hasCheckedDiff ? 'after:pointer-events-auto after:opacity-70' : ''}`}
         >
-          <ViewPortSizeInput
-            label="差分画像のビューポート幅を入力"
-            viewPortSize={viewPortSize}
-            setViewPortSize={setViewPortSize}
-          ></ViewPortSizeInput>
           <Tabs>
             <TabItem label="Source URL">
               <Textarea
@@ -172,16 +167,24 @@ function App(): JSX.Element {
               </CheckboxToggle>
             </TabItem>
           </Tabs>
-          <div className="mt-5">
+          <ViewPortSizeInput
+            label="差分画像のビューポート幅を入力"
+            viewPortSize={viewPortSize}
+            setViewPortSize={setViewPortSize}
+          ></ViewPortSizeInput>
+          <div className="mt-7 text-center text-lg font-bold">
             <ExecutionButton handleClick={handleCheckedDiffClick}>差分確認</ExecutionButton>
           </div>
           {hasCheckedDiff && (
-            <ExecutionButton handleClick={reset} className="relative z-10">
+            <ExecutionButton
+              handleClick={reset}
+              className="top-1/2 absolute left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 bg-red-500 hover:bg-red-600 font-bold"
+            >
               リセット
             </ExecutionButton>
           )}
         </div>
-        <div className="border-l-2 border-l-black">
+        <div className="bg-gray-100">
           <Table
             sourceUrlList={sourceUrlState.urlList}
             targetUrlList={targetUrlState.urlList}

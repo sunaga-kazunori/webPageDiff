@@ -66,7 +66,7 @@ const Tabs: React.FC<Props> = ({ children, defaultIndex = 0 }: Props) => {
         onKeyDown={handleKeydown}
         ref={(element) => (tabRefs.current[index] = element)}
         aria-selected={activeIndex === index ? 'true' : 'false'}
-        className={`px-4 py-2 rounded-t-lg border-b-2 ${
+        className={`px-4 py-2 rounded-t-lg border-b-2 w-2/4 font-bold cursor-pointer ${
           activeIndex === index
             ? 'border-blue-500 text-blue-500'
             : 'border-transparent text-gray-500 hover:text-blue-500'
@@ -78,7 +78,7 @@ const Tabs: React.FC<Props> = ({ children, defaultIndex = 0 }: Props) => {
   });
 
   return (
-    <div>
+    <div className="pb-6 border-b border-gray-400 mb-6">
       <div className="flex space-x-2 border-b mb-4" role="tablist">
         {tabs}
       </div>
