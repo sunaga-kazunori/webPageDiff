@@ -33,8 +33,8 @@ const Table: React.FC<Props> = ({ sourceUrlList, targetUrlList, diffPixelList, d
             <th className="border border-gray-300 px-4 py-2 bg-white">Target URL</th>
             {diffPixelList.length !== 0 && (
               <>
-                <th className="border border-gray-300 px-4 py-2">差分量（px）</th>
-                <th className="border border-gray-300 px-4 py-2">差分画像</th>
+                <th className="border border-gray-300 px-4 py-2 bg-white">差分量（px）</th>
+                <th className="border border-gray-300 px-4 py-2 bg-white">差分画像</th>
               </>
             )}
           </tr>
