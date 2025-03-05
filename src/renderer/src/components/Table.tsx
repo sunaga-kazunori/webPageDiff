@@ -1,5 +1,5 @@
 import React from 'react';
-import SaveButton from './SaveButton';
+import Button from './Button';
 
 type Props = {
   sourceUrlList: string[];
@@ -65,7 +65,7 @@ const Table: React.FC<Props> = ({ sourceUrlList, targetUrlList, diffPixelList, d
                       )}
                     </td>
                     <td className="border border-gray-300 px-4 py-2 text-center">
-                      <SaveButton label="保存" handleClick={handleClick}></SaveButton>
+                      <Button label="保存" handleClick={handleClick} className="px-4 py-1"></Button>
                     </td>
                   </>
                 )}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import BasicAuthenticationInput from './components/BasicAuthenticationInput';
+import Button from './components/Button';
 import CheckboxToggle from './components/CheckboxToggle';
-import ExecutionButton from './components/executionButton';
 import TabItem from './components/TabItem';
 import Table from './components/Table';
 import Tabs from './components/Tabs';
@@ -177,15 +177,14 @@ function App(): JSX.Element {
             setViewPortSize={setViewPortSize}
           ></ViewPortSizeInput>
           <div className="mt-7 text-center text-lg font-bold">
-            <ExecutionButton handleClick={handleCheckedDiffClick}>差分確認</ExecutionButton>
+            <Button handleClick={handleCheckedDiffClick} label="差分確認"></Button>
           </div>
           {hasCheckedDiff && (
-            <ExecutionButton
+            <Button
+              label="リセット"
               handleClick={reset}
               className="top-1/2 absolute left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 bg-red-500 hover:bg-red-600 font-bold"
-            >
-              リセット
-            </ExecutionButton>
+            ></Button>
           )}
         </div>
         <div className="bg-gray-50">
