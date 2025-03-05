@@ -186,7 +186,7 @@ function App(): JSX.Element {
             </ExecutionButton>
           )}
         </div>
-        <div className="bg-gray-100">
+        <div className="bg-gray-50">
           <Table
             sourceUrlList={sourceUrlState.urlList}
             targetUrlList={targetUrlState.urlList}

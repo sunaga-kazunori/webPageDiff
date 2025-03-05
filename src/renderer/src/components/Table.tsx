@@ -28,9 +28,9 @@ const Table: React.FC<Props> = ({ sourceUrlList, targetUrlList, diffPixelList, d
 
         <thead>
           <tr>
-            <th className="border border-gray-300 px-4 py-2">No</th>
-            <th className="border border-gray-300 px-4 py-2">Source URL</th>
-            <th className="border border-gray-300 px-4 py-2">Target URL</th>
+            <th className="border border-gray-300 px-4 py-2 bg-white">No</th>
+            <th className="border border-gray-300 px-4 py-2 bg-white">Source URL</th>
+            <th className="border border-gray-300 px-4 py-2 bg-white">Target URL</th>
             {diffPixelList.length !== 0 && (
               <>
                 <th className="border border-gray-300 px-4 py-2">差分量（px）</th>

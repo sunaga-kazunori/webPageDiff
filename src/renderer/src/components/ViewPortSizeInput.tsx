@@ -22,7 +22,7 @@ const Textarea: React.FC<Props> = ({ label, viewPortSize, setViewPortSize }) => 
 
   return (
     <label className="flex flex-col">
-      {label}
+      <span className="font-bold">{label}</span>
       <span className="flex items-center">
         <input
           type="number"
