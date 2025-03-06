@@ -41,6 +41,10 @@ function App(): JSX.Element {
     targetUrlState.setUrlText('');
     setDiffImageList([]);
     setDiffPixelList([]);
+    sourceBasicAuthentication.setUsername('');
+    sourceBasicAuthentication.setPassword('');
+    targetBasicAuthentication.setUsername('');
+    targetBasicAuthentication.setPassword('');
   };
 
   const { isReset, reset } = useReset(_reset);
