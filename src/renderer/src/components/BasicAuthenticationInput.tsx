@@ -3,7 +3,6 @@ import React, { Dispatch, SetStateAction } from 'react';
 type Props = {
   label: string;
   setText: Dispatch<SetStateAction<string>>;
-  isChecked: boolean;
   value: string;
 };
 
