@@ -126,7 +126,7 @@ function App(): JSX.Element {
                 isReset={isReset}
               ></Textarea>
               <CheckboxToggle
-                label="BASIC認証"
+                label="Basic認証"
                 isChecked={isCheckedSourceUrlBasicAuthentication}
                 setIsChecked={setIsCheckedSourceUrlBasicAuthentication}
               >
@@ -152,7 +152,7 @@ function App(): JSX.Element {
                 isReset={isReset}
               ></Textarea>
               <CheckboxToggle
-                label="BASIC認証"
+                label="Basic認証"
                 isChecked={isCheckedTargetUrlBasicAuthentication}
                 setIsChecked={setIsCheckedTargetUrlBasicAuthentication}
               >
@@ -172,7 +172,7 @@ function App(): JSX.Element {
             </TabItem>
           </Tabs>
           <ViewPortSizeInput
-            label="差分画像のビューポート幅を入力"
+            label="差分を確認するビューポート幅を入力"
             viewPortSize={viewPortSize}
             setViewPortSize={setViewPortSize}
           ></ViewPortSizeInput>
