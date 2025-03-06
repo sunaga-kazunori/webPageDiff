@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import BasicAuthenticationInput from './components/BasicAuthenticationInput';
 import Button from './components/Button';
 import CheckboxToggle from './components/CheckboxToggle';
+import LoadingSpinner from './components/LoadingSpinner';
 import TabItem from './components/TabItem';
 import Table from './components/Table';
 import Tabs from './components/Tabs';
@@ -101,12 +102,7 @@ function App(): JSX.Element {
 
   return (
     <>
-      {isLoading && (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[1] text-white flex flex-col items-center space-y-4">
-          <div className="w-8 h-8 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
-          <div>Loading...</div>
-        </div>
-      )}
+      {isLoading && <LoadingSpinner label="Loading..."></LoadingSpinner>}
 
       <div
         className={`grid grid-cols-[30%_1fr] grid-rows-[100dvh] relative after:fixed after:top-0 after:right-0 after:bottom-0 after:left-0 after:pointer-events-none after:content-[''] after:bg-black after:opacity-0 after:transition-opacity after:duration-200
