@@ -4,7 +4,6 @@ type Props = {
   label: string;
   urlText: string;
   setUrlText: Dispatch<SetStateAction<string>>;
-  isReset: boolean;
 };
 
 const Textarea: React.FC<Props> = ({ label, urlText, setUrlText }) => {

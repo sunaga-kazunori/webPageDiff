@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
-import BasicAuthenticationInput from './components/BasicAuthenticationInput';
 import Button from './components/Button';
-import CheckboxToggle from './components/CheckboxToggle';
 import LoadingSpinner from './components/LoadingSpinner';
 import TabItem from './components/TabItem';
 import Table from './components/Table';
 import Tabs from './components/Tabs';
-import Textarea from './components/Textarea';
+import UrlInput from './components/UrlInput';
 import ViewPortSizeInput from './components/ViewPortSizeInput';
 import { useBasicAuthentication } from './hooks/useBasicAuthentication ';
 import { useReset } from './hooks/useReset';
@@ -47,7 +45,7 @@ function App(): JSX.Element {
     targetBasicAuthentication.setPassword('');
   };
 
-  const { isReset, reset } = useReset(_reset);
+  const { reset } = useReset(_reset);
 
   const { isValid, errorMessage } = validateForDiffCheck(
     sourceUrlState.urlList,
@@ -109,52 +107,18 @@ function App(): JSX.Element {
         >
           <Tabs>
             <TabItem label="Source URL">
-              <Textarea
+              <UrlInput
+                urlState={sourceUrlState}
+                basicAuthenticationState={sourceBasicAuthentication}
                 label="Source URLを入力"
-                urlText={sourceUrlState.urlText}
-                setUrlText={sourceUrlState.setUrlText}
-                isReset={isReset}
-              ></Textarea>
-              <CheckboxToggle
-                label="Basic認証"
-                isChecked={sourceBasicAuthentication.isChecked}
-                setIsChecked={sourceBasicAuthentication.setIsChecked}
-              >
-                <BasicAuthenticationInput
-                  label="ユーザー名"
-                  setText={sourceBasicAuthentication.setUsername}
-                  value={sourceBasicAuthentication.username}
-                ></BasicAuthenticationInput>
-                <BasicAuthenticationInput
-                  label="パスワード"
-                  setText={sourceBasicAuthentication.setPassword}
-                  value={sourceBasicAuthentication.password}
-                ></BasicAuthenticationInput>
-              </CheckboxToggle>
+              ></UrlInput>
             </TabItem>
             <TabItem label="Target URL">
-              <Textarea
+              <UrlInput
+                urlState={targetUrlState}
+                basicAuthenticationState={targetBasicAuthentication}
                 label="Target URLを入力"
-                urlText={targetUrlState.urlText}
-                setUrlText={targetUrlState.setUrlText}
-                isReset={isReset}
-              ></Textarea>
-              <CheckboxToggle
-                label="Basic認証"
-                isChecked={targetBasicAuthentication.isChecked}
-                setIsChecked={targetBasicAuthentication.setIsChecked}
-              >
-                <BasicAuthenticationInput
-                  label="ユーザー名"
-                  setText={targetBasicAuthentication.setUsername}
-                  value={targetBasicAuthentication.username}
-                ></BasicAuthenticationInput>
-                <BasicAuthenticationInput
-                  label="パスワード"
-                  setText={targetBasicAuthentication.setPassword}
-                  value={targetBasicAuthentication.password}
-                ></BasicAuthenticationInput>
-              </CheckboxToggle>
+              ></UrlInput>
             </TabItem>
           </Tabs>
           <ViewPortSizeInput

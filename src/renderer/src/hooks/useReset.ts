@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
 type UseReset = {
-  isReset: boolean;
   reset: () => void;
   setIsReset: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -20,5 +19,5 @@ export const useReset = (_reset): UseReset => {
     }
   }, [isReset]);
 
-  return { isReset, reset, setIsReset };
+  return { reset, setIsReset };
 };
