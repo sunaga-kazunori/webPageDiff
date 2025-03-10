@@ -1,10 +1,11 @@
 import React from 'react';
+import { errorData } from '../../../shared/constants';
 import Button from './Button';
 
 type Props = {
   sourceUrlList: string[];
   targetUrlList: string[];
-  diffPixelList: number[];
+  diffPixelList: (string | number)[];
   diffImageList: string[];
 };
 
@@ -16,7 +17,7 @@ const Table: React.FC<Props> = ({ sourceUrlList, targetUrlList, diffPixelList, d
   }
 
   return (
-    <table className="table-auto w-full border-collapse border border-gray-300">
+    <table className="table-auto w-full border-collapse border border-gray-300 mt-5">
       <colgroup>
         <col className="w-[10%]" />
         <col className={diffPixelList.length === 0 ? 'w-[45%]' : 'w-[30%]'} />
@@ -63,12 +64,22 @@ const Table: React.FC<Props> = ({ sourceUrlList, targetUrlList, diffPixelList, d
                       '0'
                     ) : (
                       <>
-                        <strong className="font-bold text-red-500">{diffPixelList[index]}</strong>
+                        {diffPixelList[index] === errorData.imageSize ? null : (
+                          <strong className="font-bold text-red-500">{diffPixelList[index]}</strong>
+                        )}
                       </>
                     )}
                   </td>
                   <td className="border border-gray-300 px-4 py-2 text-center">
-                    <Button label="保存" handleClick={handleClick} className="px-4 py-1"></Button>
+                    <>
+                      {diffPixelList[index] === errorData.imageSize ? null : (
+                        <Button
+                          label="保存"
+                          handleClick={handleClick}
+                          className="px-4 py-1"
+                        ></Button>
+                      )}
+                    </>
                   </td>
                 </>
               )}

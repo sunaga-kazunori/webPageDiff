@@ -8,9 +8,10 @@ import { PNG } from 'pngjs';
 import puppeteer from 'puppeteer';
 import icon from '../../resources/icon.png?asset';
 import { BasicAuthentication } from '../preload/types';
+import { errorData } from '../shared/constants';
 
 type DiffImageList = string[];
-type DiffPixelList = string[];
+type DiffPixelList = (string | number)[];
 
 let mainWindow: null | BrowserWindow = null;
 
@@ -107,7 +108,15 @@ app.whenReady().then(() => {
             });
           }
 
-          await page.goto(sourceUrlList[index], { waitUntil: 'networkidle2', timeout: 30000 });
+          try {
+            await page.goto(sourceUrlList[index], { waitUntil: 'networkidle2', timeout: 30000 });
+          } catch (_) {
+            diffPixelList.push(errorData.basicAuthentication);
+            diffImageList.push(errorData.basicAuthentication);
+
+            return;
+          }
+
           const sourceScreenshotPath = `${tempDirectory}${index}-source.png`;
           await page.screenshot({ path: sourceScreenshotPath, fullPage: true });
 
@@ -118,7 +127,15 @@ app.whenReady().then(() => {
             });
           }
 
-          await page.goto(targetUrlList[index], { waitUntil: 'networkidle2', timeout: 30000 });
+          try {
+            await page.goto(targetUrlList[index], { waitUntil: 'networkidle2', timeout: 30000 });
+          } catch (_) {
+            diffPixelList.push(errorData.basicAuthentication);
+            diffImageList.push(errorData.basicAuthentication);
+
+            return;
+          }
+
           const targetScreenshotPath = `${tempDirectory}${index}-target.png`;
           await page.screenshot({ path: targetScreenshotPath, fullPage: true });
 
@@ -140,8 +157,8 @@ app.whenReady().then(() => {
 
             diffPixelList.push(diffPixel);
           } catch (error) {
-            diffPixelList.push('error: Images Sizes');
-            diffImageList.push('error: Images Sizes');
+            diffPixelList.push(errorData.imageSize);
+            diffImageList.push(errorData.imageSize);
           }
 
           const chunks: Buffer[] = [];

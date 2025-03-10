@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Button from './components/Button';
+import ErrorMessage from './components/ErrorMessage';
 import LoadingSpinner from './components/LoadingSpinner';
 import TabItem from './components/TabItem';
 import Table from './components/Table';
@@ -14,7 +15,7 @@ import { validateForDiffCheck } from './utilities/validateForDiffCheck';
 function App(): JSX.Element {
   const DEFAULT_VIEWPORT_SIZE = 1280;
   const [diffImageList, setDiffImageList] = useState<string[]>([]);
-  const [diffPixelList, setDiffPixelList] = useState<number[]>([]);
+  const [diffPixelList, setDiffPixelList] = useState<(string | number)[]>([]);
   const [isLoading, setLoading] = useState(false);
   const [hasCheckedDiff, setHasCheckedDiff] = useState(false);
   const [viewPortSize, setViewPortSize] = useState(DEFAULT_VIEWPORT_SIZE);
@@ -137,7 +138,8 @@ function App(): JSX.Element {
             ></Button>
           )}
         </div>
-        <div className="bg-gray-50 p-4">
+        <div className="bg-gray-50 p-4 first:mt-0">
+          <ErrorMessage diffPixelList={diffPixelList}></ErrorMessage>
           <Table
             sourceUrlList={sourceUrlState.urlList}
             targetUrlList={targetUrlState.urlList}
