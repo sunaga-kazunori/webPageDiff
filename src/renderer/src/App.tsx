@@ -23,6 +23,7 @@ function App(): JSX.Element {
   const targetUrlState = useUrlList();
   const sourceBasicAuthentication = useBasicAuthentication();
   const targetBasicAuthentication = useBasicAuthentication();
+  const [activeTabIndex, setActiveTabIndex] = useState(0);
 
   const errorMessages = {
     mismatch: 'テキストエリアに入力されたURLの数が異なります。URLの数を揃えてください。',
@@ -40,10 +41,9 @@ function App(): JSX.Element {
     targetUrlState.setUrlText('');
     setDiffImageList([]);
     setDiffPixelList([]);
-    sourceBasicAuthentication.setUsername('');
-    sourceBasicAuthentication.setPassword('');
-    targetBasicAuthentication.setUsername('');
-    targetBasicAuthentication.setPassword('');
+    setActiveTabIndex(0);
+    sourceBasicAuthentication.setIsChecked(false);
+    targetBasicAuthentication.setIsChecked(false);
   };
 
   const { reset } = useReset(_reset);
@@ -106,7 +106,7 @@ function App(): JSX.Element {
           className={`p-5 relative after:absolute after:top-0 after:right-0 after:bottom-0 after:left-0 after:pointer-events-none after:content-[''] after:bg-black after:opacity-0 after:transition-opacity after:duration-200
         ${hasCheckedDiff ? 'after:pointer-events-auto after:opacity-70' : ''}`}
         >
-          <Tabs>
+          <Tabs activeIndex={activeTabIndex} setActiveIndex={setActiveTabIndex}>
             <TabItem label="Source URL">
               <UrlInput
                 urlState={sourceUrlState}

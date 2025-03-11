@@ -1,12 +1,12 @@
-import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useRef } from 'react';
 
 type Props = {
+  activeIndex: number;
+  setActiveIndex: Dispatch<SetStateAction<number>>;
   children: ReactNode;
-  defaultIndex?: number;
 };
 
-const Tabs: React.FC<Props> = ({ children, defaultIndex = 0 }: Props) => {
-  const [activeIndex, setActiveIndex] = useState(defaultIndex);
+const Tabs: React.FC<Props> = ({ children, activeIndex, setActiveIndex }: Props) => {
   const randomString = useMemo(() => `tab-${crypto.randomUUID()}`, []);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const isInitialRender = useRef(true);
