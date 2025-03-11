@@ -138,8 +138,8 @@ function App(): JSX.Element {
             ></Button>
           )}
         </div>
-        <div className="bg-gray-50 p-4 first:mt-0">
-          <ErrorMessage diffPixelList={diffPixelList}></ErrorMessage>
+        <div className="bg-gray-50 p-4">
+          <ErrorMessage diffPixelList={diffPixelList} diffImageList={diffImageList}></ErrorMessage>
           <Table
             sourceUrlList={sourceUrlState.urlList}
             targetUrlList={targetUrlState.urlList}

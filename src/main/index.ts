@@ -110,9 +110,14 @@ app.whenReady().then(() => {
 
           try {
             await page.goto(sourceUrlList[index], { waitUntil: 'networkidle2', timeout: 30000 });
-          } catch (_) {
-            diffPixelList.push(errorData.basicAuthentication);
-            diffImageList.push(errorData.basicAuthentication);
+          } catch (error) {
+            if (error instanceof Error && error.message.includes('ERR_INVALID_AUTH_CREDENTIALS')) {
+              diffPixelList.push(errorData.basicAuthentication);
+              diffImageList.push(errorData.basicAuthentication);
+            } else {
+              diffPixelList.push(errorData.pageAccess);
+              diffImageList.push(errorData.pageAccess);
+            }
 
             return;
           }
@@ -162,24 +167,30 @@ app.whenReady().then(() => {
           }
 
           const chunks: Buffer[] = [];
-          await new Promise<void>((resolve, reject) => {
-            diffImage
-              .pack()
-              .on('data', (chunk) => {
-                chunks.push(chunk);
-              })
-              .on('end', () => {
-                try {
-                  const buffer = Buffer.concat(chunks);
-                  const base64Image = buffer.toString('base64');
-                  diffImageList.push(base64Image);
-                  resolve();
-                } catch (error) {
-                  reject(error);
-                }
-              })
-              .on('error', reject);
-          });
+
+          try {
+            await new Promise<void>((resolve, reject) => {
+              diffImage
+                .pack()
+                .on('data', (chunk) => {
+                  chunks.push(chunk);
+                })
+                .on('end', () => {
+                  try {
+                    const buffer = Buffer.concat(chunks);
+                    const base64Image = buffer.toString('base64');
+                    diffImageList.push(base64Image);
+                    resolve();
+                  } catch (error) {
+                    reject(error);
+                  }
+                })
+                .on('error', reject);
+            });
+          } catch (_) {
+            diffImageList.push(errorData.diffImage);
+          }
+
           await page.close();
         })
       );

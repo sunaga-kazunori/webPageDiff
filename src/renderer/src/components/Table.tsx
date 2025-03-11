@@ -17,7 +17,7 @@ const Table: React.FC<Props> = ({ sourceUrlList, targetUrlList, diffPixelList, d
   }
 
   return (
-    <table className="table-auto w-full border-collapse border border-gray-300 mt-5">
+    <table className="table-auto w-full border-collapse border border-gray-300 [&:not(:first-child)]:mt-5">
       <colgroup>
         <col className="w-[10%]" />
         <col className={diffPixelList.length === 0 ? 'w-[45%]' : 'w-[30%]'} />
@@ -64,7 +64,9 @@ const Table: React.FC<Props> = ({ sourceUrlList, targetUrlList, diffPixelList, d
                       '0'
                     ) : (
                       <>
-                        {diffPixelList[index] === errorData.imageSize ? null : (
+                        {diffPixelList[index] === errorData.imageSize ||
+                        diffPixelList[index] === errorData.basicAuthentication ||
+                        diffPixelList[index] === errorData.pageAccess ? null : (
                           <strong className="font-bold text-red-500">{diffPixelList[index]}</strong>
                         )}
                       </>
@@ -72,7 +74,10 @@ const Table: React.FC<Props> = ({ sourceUrlList, targetUrlList, diffPixelList, d
                   </td>
                   <td className="border border-gray-300 px-4 py-2 text-center">
                     <>
-                      {diffPixelList[index] === errorData.imageSize ? null : (
+                      {diffPixelList[index] === errorData.imageSize ||
+                      diffPixelList[index] === errorData.basicAuthentication ||
+                      diffPixelList[index] === errorData.pageAccess ||
+                      diffImageList[index] === errorData.diffImage ? null : (
                         <Button
                           label="保存"
                           handleClick={handleClick}
