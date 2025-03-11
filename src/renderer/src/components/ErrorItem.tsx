@@ -6,7 +6,7 @@ type Props = {
 };
 
 const ErrorItem: React.FC<Props> = ({ index, message }) => (
-  <strong key={crypto.randomUUID()} className="text-red-500 flex mt-1">
+  <strong className="text-red-500 flex mt-1">
     <span className="shrink-0">No{index + 1}：</span>
     <span>{message}</span>
   </strong>
