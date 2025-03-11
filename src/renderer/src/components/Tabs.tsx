@@ -1,4 +1,4 @@
-import React, { Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useRef } from 'react';
+import React, { Dispatch, ReactNode, SetStateAction, useEffect, useId, useRef } from 'react';
 
 type Props = {
   activeIndex: number;
@@ -7,7 +7,7 @@ type Props = {
 };
 
 const Tabs: React.FC<Props> = ({ children, activeIndex, setActiveIndex }: Props) => {
-  const randomString = useMemo(() => `tab-${crypto.randomUUID()}`, []);
+  const id = useId();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const isInitialRender = useRef(true);
   const handleClick = (index: number): void => {
@@ -52,7 +52,7 @@ const Tabs: React.FC<Props> = ({ children, activeIndex, setActiveIndex }: Props)
       return null;
     }
 
-    const buttonId = `${randomString}-${index}`;
+    const buttonId = `${id}-${index}`;
 
     return (
       <button
@@ -60,7 +60,7 @@ const Tabs: React.FC<Props> = ({ children, activeIndex, setActiveIndex }: Props)
         type="button"
         role="tab"
         tabIndex={activeIndex === index ? 0 : -1}
-        aria-controls={randomString}
+        aria-controls={id}
         key={buttonId}
         onClick={() => handleClick(index)}
         onKeyDown={handleKeydown}
@@ -83,7 +83,7 @@ const Tabs: React.FC<Props> = ({ children, activeIndex, setActiveIndex }: Props)
         {tabs}
       </div>
 
-      <div id={randomString} role="tabpanel" aria-labelledby={`${randomString}-${activeIndex}`}>
+      <div id={id} role="tabpanel" aria-labelledby={`${id}-${activeIndex}`}>
         {React.Children.toArray(children)[activeIndex]}
       </div>
     </div>
