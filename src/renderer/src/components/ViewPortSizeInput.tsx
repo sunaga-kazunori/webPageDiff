@@ -6,7 +6,7 @@ type Props = {
   setViewPortSize: Dispatch<SetStateAction<number>>;
 };
 
-const Textarea: React.FC<Props> = ({ label, viewPortSize, setViewPortSize }) => {
+const ViewPortSizeInput: React.FC<Props> = ({ label, viewPortSize, setViewPortSize }) => {
   const handleChange = (event: ChangeEvent): void => {
     if (!(event.target instanceof HTMLInputElement)) {
       throw new TypeError();
@@ -38,4 +38,4 @@ const Textarea: React.FC<Props> = ({ label, viewPortSize, setViewPortSize }) => 
   );
 };
 
-export default Textarea;
+export default ViewPortSizeInput;
