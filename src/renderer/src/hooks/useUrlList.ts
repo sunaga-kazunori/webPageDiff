@@ -1,5 +1,5 @@
-import { convertArray } from '@renderer/utilities/common';
 import { useEffect, useState } from 'react';
+import { convertArray } from '../utilities/common';
 
 export const useUrlList = (): {
   urlText: string;
