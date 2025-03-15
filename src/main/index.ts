@@ -2,7 +2,6 @@ import { electronApp, is, optimizer } from '@electron-toolkit/utils';
 import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import fs from 'fs';
 import os from 'os';
-import pLimit from 'p-limit';
 import path, { join } from 'path';
 import { PNG } from 'pngjs';
 import puppeteer from 'puppeteer';
@@ -87,8 +86,6 @@ app.whenReady().then(() => {
       const sourceUrlUserPassword = basicAuthentication.sourceUrl.password;
       const targetUrlUserName = basicAuthentication.targetUrl.userName;
       const targetUrlUserPassword = basicAuthentication.targetUrl.password;
-      /**同時実行数の制限 */
-      const limit = pLimit(5);
       const browser = await puppeteer.launch();
       const tempDirectory = path.join(os.tmpdir(), 'webPageDiff-temp');
 
@@ -96,106 +93,104 @@ app.whenReady().then(() => {
         fs.mkdirSync(tempDirectory);
       }
 
-      const tasks = sourceUrlList.map((_, index) =>
-        limit(async () => {
-          const page = await browser.newPage();
-          await page.setViewport({ width: viewPortSize, height: 1000 });
+      // 並列で処理を行うと処理が途中で止まることがあるため直列で処理を行う
+      for (let index = 0; index < sourceUrlList.length; index++) {
+        const page = await browser.newPage();
+        await page.setViewport({ width: viewPortSize, height: 1000 });
 
-          if (sourceUrlUserName && sourceUrlUserPassword) {
-            await page.authenticate({
-              username: sourceUrlUserName,
-              password: sourceUrlUserPassword
-            });
-          }
+        if (sourceUrlUserName && sourceUrlUserPassword) {
+          await page.authenticate({
+            username: sourceUrlUserName,
+            password: sourceUrlUserPassword
+          });
+        }
 
-          try {
-            await page.goto(sourceUrlList[index], { waitUntil: 'networkidle2', timeout: 30000 });
-          } catch (error) {
-            if (error instanceof Error && error.message.includes('ERR_INVALID_AUTH_CREDENTIALS')) {
-              diffPixelList.push(errorData.basicAuthentication);
-              diffImageList.push(errorData.basicAuthentication);
-            } else {
-              diffPixelList.push(errorData.pageAccess);
-              diffImageList.push(errorData.pageAccess);
-            }
-
-            return;
-          }
-
-          const sourceScreenshotPath = `${tempDirectory}${index}-source.png`;
-          await page.screenshot({ path: sourceScreenshotPath, fullPage: true });
-
-          if (targetUrlUserName && targetUrlUserPassword) {
-            await page.authenticate({
-              username: targetUrlUserName,
-              password: targetUrlUserPassword
-            });
-          }
-
-          try {
-            await page.goto(targetUrlList[index], { waitUntil: 'networkidle2', timeout: 30000 });
-          } catch (_) {
+        try {
+          await page.goto(sourceUrlList[index], { waitUntil: 'networkidle2', timeout: 30000 });
+        } catch (error) {
+          if (error instanceof Error && error.message.includes('ERR_INVALID_AUTH_CREDENTIALS')) {
             diffPixelList.push(errorData.basicAuthentication);
             diffImageList.push(errorData.basicAuthentication);
-
-            return;
+          } else {
+            diffPixelList.push(errorData.pageAccess);
+            diffImageList.push(errorData.pageAccess);
           }
 
-          const targetScreenshotPath = `${tempDirectory}${index}-target.png`;
-          await page.screenshot({ path: targetScreenshotPath, fullPage: true });
+          return;
+        }
 
-          const sourceImage = await PNG.sync.read(await fs.promises.readFile(sourceScreenshotPath));
-          const targetImage = await PNG.sync.read(await fs.promises.readFile(targetScreenshotPath));
-          const { width, height } = sourceImage;
-          const diffImage = new PNG({ width, height });
-          const { default: pixelmatch } = await import('pixelmatch');
+        const sourceScreenshotPath = `${tempDirectory}${index}-source.png`;
+        await page.screenshot({ path: sourceScreenshotPath, fullPage: true });
 
-          try {
-            const diffPixel = pixelmatch(
-              sourceImage.data,
-              targetImage.data,
-              diffImage.data,
-              width,
-              height,
-              { threshold: 0.1 }
-            );
+        if (targetUrlUserName && targetUrlUserPassword) {
+          await page.authenticate({
+            username: targetUrlUserName,
+            password: targetUrlUserPassword
+          });
+        }
 
-            diffPixelList.push(diffPixel);
-          } catch (error) {
-            diffPixelList.push(errorData.imageSize);
-            diffImageList.push(errorData.imageSize);
-          }
+        try {
+          await page.goto(targetUrlList[index], { waitUntil: 'networkidle2', timeout: 30000 });
+        } catch (_) {
+          diffPixelList.push(errorData.basicAuthentication);
+          diffImageList.push(errorData.basicAuthentication);
 
-          const chunks: Buffer[] = [];
+          return;
+        }
 
-          try {
-            await new Promise<void>((resolve, reject) => {
-              diffImage
-                .pack()
-                .on('data', (chunk) => {
-                  chunks.push(chunk);
-                })
-                .on('end', () => {
-                  try {
-                    const buffer = Buffer.concat(chunks);
-                    const base64Image = buffer.toString('base64');
-                    diffImageList.push(base64Image);
-                    resolve();
-                  } catch (error) {
-                    reject(error);
-                  }
-                })
-                .on('error', reject);
-            });
-          } catch (_) {
-            diffImageList.push(errorData.diffImage);
-          }
+        const targetScreenshotPath = `${tempDirectory}${index}-target.png`;
+        await page.screenshot({ path: targetScreenshotPath, fullPage: true });
 
-          await page.close();
-        })
-      );
+        const sourceImage = await PNG.sync.read(await fs.promises.readFile(sourceScreenshotPath));
+        const targetImage = await PNG.sync.read(await fs.promises.readFile(targetScreenshotPath));
+        const { width, height } = sourceImage;
+        const diffImage = new PNG({ width, height });
+        const { default: pixelmatch } = await import('pixelmatch');
 
-      await Promise.all(tasks);
+        try {
+          const diffPixel = pixelmatch(
+            sourceImage.data,
+            targetImage.data,
+            diffImage.data,
+            width,
+            height,
+            { threshold: 0.1 }
+          );
+
+          diffPixelList.push(diffPixel);
+        } catch (error) {
+          diffPixelList.push(errorData.imageSize);
+          diffImageList.push(errorData.imageSize);
+        }
+
+        const chunks: Buffer[] = [];
+
+        try {
+          await new Promise<void>((resolve, reject) => {
+            diffImage
+              .pack()
+              .on('data', (chunk) => {
+                chunks.push(chunk);
+              })
+              .on('end', () => {
+                try {
+                  const buffer = Buffer.concat(chunks);
+                  const base64Image = buffer.toString('base64');
+                  diffImageList.push(base64Image);
+                  resolve();
+                } catch (error) {
+                  reject(error);
+                }
+              })
+              .on('error', reject);
+          });
+        } catch (_) {
+          diffImageList.push(errorData.diffImage);
+        }
+
+        await page.close();
+      }
+
       await browser.close();
 
       mainWindow?.webContents.send('onDiffImageList', diffImageList);
