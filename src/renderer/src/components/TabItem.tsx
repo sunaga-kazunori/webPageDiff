@@ -1,11 +1,11 @@
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 type Props = {
   label: string;
   children: ReactNode;
 };
 
-const TabItem: React.FC<Props> = ({ children }: Props) => {
+const TabItem: React.FC<Props> = ({ children }) => {
   return <>{children}</>;
 };
 
