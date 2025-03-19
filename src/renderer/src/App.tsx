@@ -106,29 +106,31 @@ function App(): JSX.Element {
           className={`p-5 relative after:absolute after:top-0 after:right-0 after:bottom-0 after:left-0 after:pointer-events-none after:content-[''] after:bg-black after:opacity-0 after:transition-opacity after:duration-200 overflow-y-auto
         ${hasCheckedDiff ? 'after:pointer-events-auto after:opacity-70' : ''}`}
         >
-          <Tabs activeIndex={activeTabIndex} setActiveIndex={setActiveTabIndex}>
-            <TabItem label="Source URL">
-              <UrlInput
-                urlState={sourceUrlState}
-                basicAuthenticationState={sourceBasicAuthentication}
-                label="Source URLを入力"
-              ></UrlInput>
-            </TabItem>
-            <TabItem label="Target URL">
-              <UrlInput
-                urlState={targetUrlState}
-                basicAuthenticationState={targetBasicAuthentication}
-                label="Target URLを入力"
-              ></UrlInput>
-            </TabItem>
-          </Tabs>
-          <ViewPortSizeInput
-            label="差分を確認するビューポート幅を入力"
-            viewPortSize={viewPortSize}
-            setViewPortSize={setViewPortSize}
-          ></ViewPortSizeInput>
-          <div className="mt-10 text-center text-lg font-bold">
-            <Button handleClick={handleCheckedDiffClick} label="差分確認"></Button>
+          <div {...(hasCheckedDiff ? { inert: 'true' } : {})}>
+            <Tabs activeIndex={activeTabIndex} setActiveIndex={setActiveTabIndex}>
+              <TabItem label="Source URL">
+                <UrlInput
+                  urlState={sourceUrlState}
+                  basicAuthenticationState={sourceBasicAuthentication}
+                  label="Source URLを入力"
+                ></UrlInput>
+              </TabItem>
+              <TabItem label="Target URL">
+                <UrlInput
+                  urlState={targetUrlState}
+                  basicAuthenticationState={targetBasicAuthentication}
+                  label="Target URLを入力"
+                ></UrlInput>
+              </TabItem>
+            </Tabs>
+            <ViewPortSizeInput
+              label="差分を確認するビューポート幅を入力"
+              viewPortSize={viewPortSize}
+              setViewPortSize={setViewPortSize}
+            ></ViewPortSizeInput>
+            <div className="mt-10 text-center text-lg font-bold">
+              <Button handleClick={handleCheckedDiffClick} label="差分確認"></Button>
+            </div>
           </div>
           {hasCheckedDiff && (
             <Button
