@@ -18,7 +18,7 @@ const BasicAuthenticationInput: React.FC<Props> = ({ label, setText, value }) =>
         type="text"
         value={value}
         onChange={handleChange}
-        className="border border-gray-400 rounded-sm mt-1"
+        className="border border-gray-400 rounded-sm mt-1 p-1"
       ></input>
     </label>
   );
