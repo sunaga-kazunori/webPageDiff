@@ -30,11 +30,13 @@ const UrlInput: React.FC<Props> = ({ urlState, basicAuthenticationState, label }
       >
         <BasicAuthenticationInput
           label="ユーザー名"
+          type="text"
           setText={basicAuthenticationState.setUsername}
           value={basicAuthenticationState.username}
         />
         <BasicAuthenticationInput
           label="パスワード"
+          type="password"
           setText={basicAuthenticationState.setPassword}
           value={basicAuthenticationState.password}
         />
