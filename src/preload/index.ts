@@ -12,10 +12,17 @@ const api: Api = {
       viewPortSize,
       basicAuthentication
     ),
-  onDiffImageList: (callback) =>
-    ipcRenderer.on('onDiffImageList', (_event, diffPixelList) => callback(diffPixelList)),
-  onDiffPixelList: (callback) =>
-    ipcRenderer.on('onDiffPixelList', (_event, diffPixelList) => callback(diffPixelList)),
+  onDiff: (callback) =>
+    ipcRenderer.on(
+      'onDiff',
+      (
+        _event,
+        diffData: {
+          pixelList: string[];
+          imageList: string[];
+        }
+      ) => callback(diffData)
+    ),
   saveImage: (imageData, index) => ipcRenderer.send('saveImage', imageData, index),
   errorAlert: (message) => ipcRenderer.invoke('errorAlert', message)
 };

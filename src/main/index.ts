@@ -192,9 +192,10 @@ app.whenReady().then(() => {
       }
 
       await browser.close();
-
-      mainWindow?.webContents.send('onDiffImageList', diffImageList);
-      mainWindow?.webContents.send('onDiffPixelList', diffPixelList);
+      mainWindow?.webContents.send('onDiff', {
+        imageList: diffImageList,
+        pixelList: diffPixelList
+      });
     }
   );
 

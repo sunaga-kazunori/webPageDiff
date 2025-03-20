@@ -18,8 +18,7 @@ export type Api = {
     viewPortSize: number,
     basicAuthentication: BasicAuthentication
   ) => void;
-  onDiffImageList: (callback: (diffPixelList: string[]) => void) => void;
-  onDiffPixelList: (callback: (diffPixelList: number[]) => void) => void;
+  onDiff: (callback: (diffData: { pixelList: string[]; imageList: string[] }) => void) => void;
   saveImage: (ImageData: Base64, index: number) => void;
   errorAlert: (message: string) => void;
 };

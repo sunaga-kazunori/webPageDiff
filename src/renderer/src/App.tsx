@@ -83,13 +83,15 @@ function App(): JSX.Element {
   };
 
   useEffect(() => {
-    window.api.onDiffImageList((_diffImageList) => {
-      setDiffImageList(_diffImageList);
+    window.api.onDiff((diffData) => {
+      console.log(diffData);
+
+      setDiffImageList(diffData.imageList);
+      setDiffPixelList(diffData.pixelList);
+      console.log(diffPixelList);
+
       setLoading(false);
       setHasCheckedDiff(true);
-    });
-    window.api.onDiffPixelList((_diffPixelList) => {
-      setDiffPixelList(_diffPixelList);
     });
   }, []);
 
