@@ -2,7 +2,7 @@ import { electronAPI } from '@electron-toolkit/preload';
 import { contextBridge, ipcRenderer } from 'electron';
 import { Api } from './types';
 
-// Custom APIs for renderer
+/** レンダラープロセス用のカスタムAPI */
 const api: Api = {
   sendAdvanceData: (sourceUrlList, targetUrlList, viewPortSize, basicAuthentication) =>
     ipcRenderer.send(
@@ -27,9 +27,8 @@ const api: Api = {
   errorAlert: (message) => ipcRenderer.invoke('errorAlert', message)
 };
 
-// Use `contextBridge` APIs to expose Electron APIs to
-// renderer only if context isolation is enabled, otherwise
-// just add to the DOM global.
+// `context isolation` が有効になっている場合のみ、`contextBridge` APIを使用して
+// Electron APIをレンダラに公開。それ以外の場合は、DOMのグローバルに追加
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI);
