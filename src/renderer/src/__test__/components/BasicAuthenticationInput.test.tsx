@@ -6,7 +6,9 @@ import BasicAuthenticationInput from '../../components/BasicAuthenticationInput'
 describe('BasicAuthenticationInput', () => {
   it('入力が行われた時、setText が正しく呼び出される', () => {
     const setTextMock = vi.fn();
-    render(<BasicAuthenticationInput label="ユーザー名" value="" setText={setTextMock} />);
+    render(
+      <BasicAuthenticationInput label="ユーザー名" value="" setText={setTextMock} type="text" />
+    );
 
     const inputElement = screen.getByRole('textbox');
 
@@ -21,7 +23,9 @@ describe('BasicAuthenticationInput', () => {
     const ParentComponent: React.FC = () => {
       const [text, setText] = useState('');
 
-      return <BasicAuthenticationInput label="ユーザー名" value={text} setText={setText} />;
+      return (
+        <BasicAuthenticationInput label="ユーザー名" value={text} setText={setText} type="text" />
+      );
     };
 
     render(<ParentComponent />);
