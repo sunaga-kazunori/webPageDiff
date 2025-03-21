@@ -72,7 +72,7 @@ app.whenReady().then(() => {
   });
 
   ipcMain.on(
-    'sendUrlList',
+    'sendAdvanceData',
     async (
       _,
       sourceUrlList: string[],

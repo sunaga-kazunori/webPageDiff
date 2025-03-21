@@ -74,7 +74,7 @@ function App(): JSX.Element {
     };
 
     setLoading(true);
-    window.api.sendUrlList(
+    window.api.sendAdvanceData(
       sourceUrlState.urlList,
       targetUrlState.urlList,
       viewPortSize,

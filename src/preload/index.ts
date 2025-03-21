@@ -4,9 +4,9 @@ import { Api } from './types';
 
 // Custom APIs for renderer
 const api: Api = {
-  sendUrlList: (sourceUrlList, targetUrlList, viewPortSize, basicAuthentication) =>
+  sendAdvanceData: (sourceUrlList, targetUrlList, viewPortSize, basicAuthentication) =>
     ipcRenderer.send(
-      'sendUrlList',
+      'sendAdvanceData',
       sourceUrlList,
       targetUrlList,
       viewPortSize,

@@ -12,7 +12,7 @@ type BasicAuthentication = {
 };
 
 export type Api = {
-  sendUrlList: (
+  sendAdvanceData: (
     sourceUrlList: string[],
     targetUrlList: string[],
     viewPortSize: number,
