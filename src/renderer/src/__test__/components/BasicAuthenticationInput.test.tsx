@@ -19,7 +19,6 @@ describe('BasicAuthenticationInput', () => {
   });
 
   it('入力された値が value に反映される', () => {
-    // 親コンポーネントの模擬テスト
     const ParentComponent: React.FC = () => {
       const [text, setText] = useState('');
 
