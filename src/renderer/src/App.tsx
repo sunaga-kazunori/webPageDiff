@@ -84,12 +84,8 @@ function App(): JSX.Element {
 
   useEffect(() => {
     window.api.onDiff((diffData) => {
-      console.log(diffData);
-
       setDiffImageList(diffData.imageList);
       setDiffPixelList(diffData.pixelList);
-      console.log(diffPixelList);
-
       setLoading(false);
       setHasCheckedDiff(true);
     });
