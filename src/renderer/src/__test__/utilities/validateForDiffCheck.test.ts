@@ -3,11 +3,12 @@ import { validateForDiffCheck } from '../../utilities/validateForDiffCheck';
 
 describe('validateForDiffCheck', () => {
   const errorMessages = {
-    offline: 'You are offline',
-    invalidViewPortSize: 'Invalid viewport size',
-    empty: 'Both URL lists are empty',
-    mismatch: 'Source and target URL lists are not the same length',
-    invalidValue: 'One or more URLs are invalid'
+    mismatch: 'テキストエリアに入力されたURLの数が異なります。URLの数を揃えてください。',
+    invalidValue: '無効なURLが含まれています。もう一度確認してください。',
+    offline: 'ネットワークに接続されていません。インターネット接続を確認してください。',
+    empty: 'URLが入力されていません。もう一度確認してください。',
+    invalidViewPortSize:
+      '入力されたビューポート幅は無効な値です。値は200を超え、かつ10000未満である必要があります。再度正しい値を入力してください。'
   };
 
   let navigatorSpy: ReturnType<typeof vi.spyOn>;
