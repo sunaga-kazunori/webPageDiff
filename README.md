@@ -1,34 +1,13 @@
-# web-page-diff
+# Webページの差分を確認する君
 
-An Electron application with React and TypeScript
+このアプリケーションは、比較したい2種類のWebページの見た目の差分情報を視覚的に確認することができます。
+リファクタリング作業を行い、テスト環境と本番環境で見た目に変更が出ていないか確認する際など に役立ちます。
 
-## Recommended IDE Setup
+## 対応環境
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+Windows
 
-## Project Setup
+## このアプリケーションでできること
 
-### Install
-
-```bash
-$ npm install
-```
-
-### Development
-
-```bash
-$ npm run dev
-```
-
-### Build
-
-```bash
-# For windows
-$ npm run build:win
-
-# For macOS
-$ npm run build:mac
-
-# For Linux
-$ npm run build:linux
-```
+- 2つのWebページのURLを入力し、見た目に差分が発生していないか確認
+- 2つのWebページのスクリーンショットを重ね合わせて差分を視覚的に比較した画像を生成
