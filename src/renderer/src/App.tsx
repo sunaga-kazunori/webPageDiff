@@ -105,7 +105,7 @@ function App(): JSX.Element {
         {...(isLoading ? { inert: 'true' } : {})}
       >
         <div
-          className={`p-5 relative after:absolute after:top-0 after:right-0 after:bottom-0 after:left-0 after:pointer-events-none after:content-[''] after:bg-black after:opacity-0 after:transition-opacity after:duration-200 overflow-y-auto
+          className={`p-5 relative after:absolute after:top-0 after:right-0 after:bottom-0 after:left-0 after:pointer-events-none after:content-[''] after:bg-black after:opacity-0 after:transition-opacity after:duration-200 overflow-y-auto shadow-[13px_0px_10px_-9px_#e0e0e0]
         ${hasCheckedDiff ? 'after:pointer-events-auto after:opacity-70' : ''}`}
         >
           <div {...(hasCheckedDiff ? { inert: 'true' } : {})}>
@@ -142,7 +142,7 @@ function App(): JSX.Element {
             ></Button>
           )}
         </div>
-        <div className="bg-gray-50 p-4 overflow-y-auto">
+        <div className="p-4 overflow-y-auto">
           <ErrorMessage diffPixelList={diffPixelList} diffImageList={diffImageList}></ErrorMessage>
           <Table
             sourceUrlList={sourceUrlState.urlList}
