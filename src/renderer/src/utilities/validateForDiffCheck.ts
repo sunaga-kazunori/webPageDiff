@@ -7,6 +7,11 @@ type ValidationResult = {
   errorMessage: string | null;
 };
 
+/**
+ * 差分確認を行う上で必要な情報のバリデートを行う
+ *
+ * @returns {ValidationResult} バリデーション結果
+ */
 export const validateForDiffCheck = (
   sourceUrlList: string[],
   targetUrlList: string[],

@@ -9,6 +9,11 @@ type UseBasicAuthentication = {
   setIsChecked: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+/**
+ * Basic認証の状態を管理するカスタムフック
+ *
+ * @returns {UseBasicAuthentication} ユーザー名、パスワード、チェックが入っているか、及びそれらの状態更新関数を含むオブジェクト
+ */
 export const useBasicAuthentication = (): UseBasicAuthentication => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
