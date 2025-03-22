@@ -5,7 +5,7 @@ type UseReset = {
   setIsReset: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const useReset = (_reset): UseReset => {
+export const useReset = (_reset: VoidFunction): UseReset => {
   const [isReset, setIsReset] = useState(false);
 
   const reset = (): void => {
