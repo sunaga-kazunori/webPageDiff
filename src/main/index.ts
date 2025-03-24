@@ -107,6 +107,11 @@ app.whenReady().then(() => {
           return;
         }
 
+        // 遅延読み込みなどで初期状態では表示されない要素の表示を行うたためページ最下部までスクロールを行う
+        await page.evaluate(() => {
+          scroll(0, 99999);
+        });
+
         const sourceScreenshotPath = `${tempDirectory}${index}-source.png`;
         await page.screenshot({ path: sourceScreenshotPath, fullPage: true });
 
@@ -125,6 +130,10 @@ app.whenReady().then(() => {
 
           return;
         }
+
+        await page.evaluate(() => {
+          scroll(0, 99999);
+        });
 
         const targetScreenshotPath = `${tempDirectory}${index}-target.png`;
         await page.screenshot({ path: targetScreenshotPath, fullPage: true });
