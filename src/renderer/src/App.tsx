@@ -12,7 +12,7 @@ import { useReset } from './hooks/useReset';
 import { useUrlList } from './hooks/useUrlList';
 import { validateForDiffCheck } from './utilities/validateForDiffCheck';
 
-function App(): JSX.Element {
+const App = (): JSX.Element => {
   const DEFAULT_VIEWPORT_SIZE = 1280;
   const [diffImageList, setDiffImageList] = useState<string[]>([]);
   const [diffPixelList, setDiffPixelList] = useState<(string | number)[]>([]);
@@ -150,6 +150,6 @@ function App(): JSX.Element {
       </div>
     </>
   );
-}
+};
 
 export default App;

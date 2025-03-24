@@ -14,7 +14,7 @@ type DiffPixelList = (string | number)[];
 
 let mainWindow: null | BrowserWindow = null;
 
-function createWindow(): void {
+const createWindow = (): void => {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 720,
@@ -43,7 +43,7 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'));
   }
-}
+};
 
 // このメソッドはElectronが初期化を終了し、ブラウザウィンドウを作成する準備ができたときに呼び出される
 app.whenReady().then(() => {
