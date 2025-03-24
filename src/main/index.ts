@@ -58,6 +58,13 @@ app.whenReady().then(() => {
 
   createWindow();
 
+  app.on('activate', function () {
+    // macOSでは、他のウィンドウが開いていない場合に、ドックアイコンがクリックされると、アプリ内でウィンドウを再作成することが一般的
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
+
   // ユーザーが入力した情報を元に差分量の確認・差分画像の作成を行う
   ipcMain.on(
     'sendAdvanceData',
