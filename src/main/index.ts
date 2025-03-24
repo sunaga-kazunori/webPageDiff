@@ -188,6 +188,8 @@ app.whenReady().then(() => {
         await page.close();
       }
 
+      fs.rmSync(tempDirectory, { recursive: true });
+
       await browser.close();
       mainWindow?.webContents.send('onDiff', {
         imageList: diffImageList,
