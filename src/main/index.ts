@@ -225,6 +225,7 @@ app.whenReady().then(() => {
     }
   });
 
+  // エラーアラートダイアログの表示
   ipcMain.handle('errorAlert', (_, message) => {
     dialog.showErrorBox('', message);
   });
