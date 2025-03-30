@@ -66,6 +66,7 @@ app.whenReady().then(() => {
   });
 
   // ユーザーが入力した情報を元に差分量の確認・差分画像の作成を行う
+  // TODO: 内部の処理の関数化を行う
   ipcMain.on(
     'sendAdvanceData',
     async (
