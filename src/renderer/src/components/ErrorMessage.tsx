@@ -7,6 +7,14 @@ type Props = {
   diffImageList: string[];
 };
 
+const errorMessages = {
+  diffImage: '差分画像を作成することができませんでした。もう一度実行してください。',
+  imageSize:
+    '差分の確認を行うことができませんでした。大量の差分が発生している可能性があるためページをご確認ください。',
+  basicAuthentication: 'Basic認証に失敗しました。正しいユーザー名とパスワードを入力してください。',
+  pageAccess: 'ページにアクセスできませんでした。URLに誤りがないかご確認ください。'
+};
+
 const ErrorMessage: React.FC<Props> = ({ diffPixelList, diffImageList }) => {
   const hasDiffImageError = diffImageList.some((item) => item === errorData.diffImage);
   const hasDiffPixelError = diffPixelList.some(
@@ -25,11 +33,7 @@ const ErrorMessage: React.FC<Props> = ({ diffPixelList, diffImageList }) => {
       {diffImageList.map((item, index) => {
         if (item === errorData.diffImage) {
           return (
-            <ErrorItem
-              key={crypto.randomUUID()}
-              index={index}
-              message="差分画像を作成することができませんでした。もう一度実行してください。"
-            />
+            <ErrorItem key={crypto.randomUUID()} index={index} message={errorMessages.diffImage} />
           );
         }
         return null;
@@ -38,11 +42,7 @@ const ErrorMessage: React.FC<Props> = ({ diffPixelList, diffImageList }) => {
       {diffPixelList.map((item, index) => {
         if (item === errorData.imageSize) {
           return (
-            <ErrorItem
-              key={crypto.randomUUID()}
-              index={index}
-              message="差分の確認を行うことができませんでした。大量の差分が発生している可能性があるためページをご確認ください。"
-            />
+            <ErrorItem key={crypto.randomUUID()} index={index} message={errorMessages.imageSize} />
           );
         }
 
@@ -51,18 +51,14 @@ const ErrorMessage: React.FC<Props> = ({ diffPixelList, diffImageList }) => {
             <ErrorItem
               key={crypto.randomUUID()}
               index={index}
-              message="Basic認証に失敗しました。正しいユーザー名とパスワードを入力してください。"
+              message={errorMessages.basicAuthentication}
             />
           );
         }
 
         if (item === errorData.pageAccess) {
           return (
-            <ErrorItem
-              key={crypto.randomUUID()}
-              index={index}
-              message="ページにアクセスできませんでした。URLに誤りがないかご確認ください。"
-            />
+            <ErrorItem key={crypto.randomUUID()} index={index} message={errorMessages.pageAccess} />
           );
         }
 
