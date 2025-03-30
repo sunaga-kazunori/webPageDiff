@@ -111,7 +111,8 @@ app.whenReady().then(() => {
             diffImageList.push(errorData.pageAccess);
           }
 
-          return;
+          await page.close();
+          continue;
         }
 
         // 遅延読み込みなどで初期状態では表示されない要素の表示を行うたためページ最下部までスクロールを行う
@@ -131,11 +132,17 @@ app.whenReady().then(() => {
 
         try {
           await page.goto(targetUrlList[index], { waitUntil: 'networkidle2', timeout: 30000 });
-        } catch (_) {
-          diffPixelList.push(errorData.basicAuthentication);
-          diffImageList.push(errorData.basicAuthentication);
+        } catch (error) {
+          if (error instanceof Error && error.message.includes('ERR_INVALID_AUTH_CREDENTIALS')) {
+            diffPixelList.push(errorData.basicAuthentication);
+            diffImageList.push(errorData.basicAuthentication);
+          } else {
+            diffPixelList.push(errorData.pageAccess);
+            diffImageList.push(errorData.pageAccess);
+          }
 
-          return;
+          await page.close();
+          continue;
         }
 
         await page.evaluate(() => {
@@ -165,6 +172,9 @@ app.whenReady().then(() => {
         } catch (error) {
           diffPixelList.push(errorData.imageSize);
           diffImageList.push(errorData.imageSize);
+
+          await page.close();
+          continue;
         }
 
         const chunks: Buffer[] = [];
